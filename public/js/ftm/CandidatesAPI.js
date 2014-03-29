@@ -83,6 +83,20 @@ define(['jquery', 'lodash', 'xml2json'], function($, _, xml2json) {
           return industry['@attributes'];
         });
 
+        if (industryList.length !== parseInt(results['candidates.industries.php']['@attributes'].record_count, 10)) {
+          // API suggests this is page, but not sure what the page size is.  Log for now.  TODO: Does this trigger?
+          console.warn('[CandidatesAPI.industries] Number of returned industries didnt match record count. ',
+                       'Expected: ' + parseInt(results['candidates.industries.php']['@attributes'].record_count, 10),
+                       'Saw: ' + industryList.length,
+                       'Params: ', opts);
+        }
+
+        if (results['candidates.industries.php']['@attributes'].next_page === 'yes') {
+          // TODO: paging not implemented, see if this ever triggers
+          console.warn('[CandidatesAPI.industries] Another page of results available, but not implemented',
+                       'Params: ', opts);
+        }
+
         if (opts.sort === 'total_dollars') {
           // API docs lied.  total_dollars appears to be ascending sort, not descending.
           industryList = industryList.reverse();
