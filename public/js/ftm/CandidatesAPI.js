@@ -80,7 +80,11 @@ define(['jquery', 'lodash', 'xml2json'], function($, _, xml2json) {
         }
 
         var industryList = results['candidates.industries.php'].candidate_industry.map(function(industry) {
-          return industry['@attributes'];
+          var i = industry['@attributes'];
+          i.total_contribution_records = parseInt(i.total_contribution_records, 10);
+          i.total_dollars = parseInt(i.total_dollars, 10);
+
+          return i;
         });
 
         if (industryList.length !== parseInt(results['candidates.industries.php']['@attributes'].record_count, 10)) {
@@ -106,7 +110,52 @@ define(['jquery', 'lodash', 'xml2json'], function($, _, xml2json) {
       });
 
       return ret;
+    },
 
+    top_contributors: function(opts) {
+      if (!opts.imsp_candidate_id)
+        throw new Error('imsp_candidate_id required');
+
+      opts = _.extend({}, opts, {key: FTM_API_KEY});
+
+      var ret = $.Deferred();
+
+      $.get('http://api.followthemoney.org/candidates.top_contributors.php', opts)
+      .fail(function(xml) {
+        alert("[CandidatesAPI.top_contributors] Error getting top_contributors!");
+        console.log(xml);
+        ret.reject(xml2json(xml));
+      })
+      .done(function(xml) {
+        var results = xml2json(xml);
+
+        if (results.error &&
+            results.error['@attributes'].code === '200' &&
+            results.error['@attributes'].text === 'no records found') {
+          ret.resolve([]);
+          return;
+
+        } else if (results.error) {
+          alert('[CandidatesAPI.top_contributors] Error in API parameters');
+          ret.reject(results.error['@attributes']);
+          return;
+        }
+
+        var topContributors = results['candidates.top_contributors.php'].top_contributor.map(function(contributor) {
+          var c = contributor['@attributes'];
+          c.contribution_ranking = parseInt(c.contribution_ranking, 10);
+          c.percent_of_total_contribution_records = parseFloat(c.percent_of_total_contribution_records, 10);
+          c.percent_of_total_total_dollars = parseFloat(c.percent_of_total_total_dollars, 10);
+          c.total_contribution_records = parseInt(c.total_contribution_records, 10);
+          c.total_dollars = parseInt(c.total_dollars, 10);
+
+          return c;
+        });
+
+        ret.resolve(topContributors);
+      });
+
+      return ret;
     }
   };
 });
