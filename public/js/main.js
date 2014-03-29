@@ -16,7 +16,6 @@ function($, xml2json, CandidatesAPI, BasicGenerator) {
   })
   .done(function(candidates) {
     console.log("Got candidates for 2010 CA Assembly 010:");
-    window.candidates = candidates;
 
     var industriesDeferreds = [],
         fullCandidates = [];
@@ -44,6 +43,14 @@ function($, xml2json, CandidatesAPI, BasicGenerator) {
 
         BasicGenerator(fc.candidate, [], fc.industries);
       });
+
+      console.log('');
+      console.log('Helpful variables to check out in your console:');
+
+      window.fullCandidates = fullCandidates;
+      console.log('  fullCandidates: list of candidates objects.  .candidate is full metadata, .industries is top industries');
     });
+
+
   });
 });
