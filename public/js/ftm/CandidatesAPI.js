@@ -7,7 +7,7 @@ define(['jquery', 'xml2json'], function($, xml2json) {
      *   opts.year: {number} Year.  defaults to 2010
      *   opts.office: {string} Office. eg 'ASSEMBLY'
      *   opts.district {string} District.  eg 010.
-     * @return {jquery.Deferred} Gets resolved with javascript XML object
+     * @return {jquery.Deferred} Gets resolved with a List of Objects, where each Object is a candidate.
      */
     list: function(opts, callback) {
       if (!opts.state)
@@ -25,9 +25,23 @@ define(['jquery', 'xml2json'], function($, xml2json) {
             '&state=' + opts.state + '&year=' + opts.year + '&office=' + opts.office +
             '&district=' + opts.district)
       .done(function(xml) {
-        ret.resolve(xml2json(xml));
+        var results = xml2json(xml);
+
+        if (results.error) {
+          alert('Error in API parameters');
+          ret.reject(results.error['@attributes']);
+          return;
+        }
+
+        var candidatesList = results['candidates.list.php'].candidate.map(function(c) {
+          return c['@attributes'];
+        });
+
+        ret.resolve(candidatesList);
       })
       .fail(function(xml) {
+        alert("Error getting candidates!");
+        console.log(xml);
         ret.reject(xml2json(xml));
       });
 
