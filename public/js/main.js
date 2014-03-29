@@ -6,4 +6,18 @@ function($, xml2json, CandidatesAPI, BasicGenerator) {
 
   window.CandidatesAPI = CandidatesAPI;
   window.BasicGenerator = BasicGenerator;
+
+  // examples
+  CandidatesAPI.list({
+    state: 'CA',
+    year:2010,
+    office: 'ASSEMBLY',
+    district: '010'
+  })
+  .done(function(candidates) {
+    console.log("Got candidates for 2010 CA Assembly 010:");
+    candidates.forEach(function(c) {
+      console.log(c);
+    });
+  });
 });
