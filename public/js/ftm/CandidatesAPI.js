@@ -1,4 +1,4 @@
-define(['jquery', 'xml2json'], function($, xml2json) {
+define(['jquery', 'lodash', 'xml2json'], function($, _, xml2json) {
   return {
     /**
      * List candidates
@@ -9,7 +9,7 @@ define(['jquery', 'xml2json'], function($, xml2json) {
      *   opts.district {string} District.  eg 010.
      * @return {jquery.Deferred} Gets resolved with a List of Objects, where each Object is a candidate.
      */
-    list: function(opts, callback) {
+    list: function(opts) {
       if (!opts.state)
         throw new Error('state required');
       if (!opts.year)
@@ -21,9 +21,12 @@ define(['jquery', 'xml2json'], function($, xml2json) {
 
       var ret = $.Deferred();
 
-      $.get('http://api.followthemoney.org/candidates.list.php?key=' + FTM_API_KEY +
-            '&state=' + opts.state + '&year=' + opts.year + '&office=' + opts.office +
-            '&district=' + opts.district)
+      $.get('http://api.followthemoney.org/candidates.list.php', _.extend({}, opts, {key: FTM_API_KEY}))
+      .fail(function(xml) {
+        alert("Error getting candidates!");
+        console.log(xml);
+        ret.reject(xml2json(xml));
+      })
       .done(function(xml) {
         var results = xml2json(xml);
 
@@ -38,14 +41,53 @@ define(['jquery', 'xml2json'], function($, xml2json) {
         });
 
         ret.resolve(candidatesList);
-      })
-      .fail(function(xml) {
-        alert("Error getting candidates!");
-        console.log(xml);
-        ret.reject(xml2json(xml));
       });
 
       return ret;
+    },
+
+    industries: function(opts) {
+      if (!opts.imsp_candidate_id)
+        throw new Error('imsp_candidate_id required');
+      if (opts.sort && !_.contains(['sector_name', 'industry_name', 'total_dollars'], opts.sort))
+        throw new Error('invalid sort option!');
+      if (opts.sort === undefined)
+        opts.sort = 'total_dollars'; //default
+
+      opts = _.extend({}, opts, {key: FTM_API_KEY});
+
+      var ret = $.Deferred();
+
+      $.get('http://api.followthemoney.org/candidates.industries.php', opts)
+      .fail(function(xml) {
+        alert("[CandidatesAPI.industries] Error getting industries!");
+        console.log(xml);
+        ret.reject(xml2json(xml));
+      })
+      .done(function(xml) {
+        var results = xml2json(xml);
+
+        if (results.error &&
+            results.error['@attributes'].code === '200' &&
+            results.error['@attributes'].text === 'no records found') {
+          ret.resolve([]);
+          return;
+
+        } else if (results.error) {
+          alert('[CandidatesAPI.industries] Error in API parameters');
+          ret.reject(results.error['@attributes']);
+          return;
+        }
+
+        var industryList = results['candidates.industries.php'].candidate_industry.map(function(industry) {
+          return industry['@attributes'];
+        });
+
+        ret.resolve(industryList);
+      });
+
+      return ret;
+
     }
   };
 });
