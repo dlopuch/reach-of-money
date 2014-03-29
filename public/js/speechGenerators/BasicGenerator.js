@@ -3,6 +3,16 @@ define([], function() {
      return ary[ Math.floor( Math.random() * ary.length) ]
   }
 
+  var SALUTATIONS = [
+          "Dear friends,"
+        , "Dear constituent,"
+        , "Hello friend,"
+      ],
+      REQUESTS = [
+          "If you vote for me,"
+        , "If you put your trust in me,"
+      ];
+
   return function(candidate, topContributors, topIndustries) {
 
 // Candidate Object
@@ -67,26 +77,26 @@ define([], function() {
 //   total_dollars: 1926107
 
   office = "Governor"
-  salutation = choose(["Dear friends,", "Dear constituent,", "Hello friend,"])
-  request = choose(["If you vote for me,", "If you put your trust in me,"])
+  salutation = choose(SALUTATIONS)
+  request = choose(REQUESTS)
   biggest = choose(["is my biggest campaign contributor",
-		    "gave more money to my campaign than anyone else"])
+        "gave more money to my campaign than anyone else"])
   fighting = choose(["be fighting hard for", "doing whatever I can to please",
-		     "giving 100% of my effort for"])
+         "giving 100% of my effort for"])
   thank = choose(["Thank you for helping me serve special interests to the best of my abilities!",
-	    "Thank you, and if you'd like me to support your interests, please make sure to make major donations to my next campaign!",
-	    "Thank you, both for you vote, and for taking part in 'sponsored democracy!"])
+      "Thank you, and if you'd like me to support your interests, please make sure to make major donations to my next campaign!",
+      "Thank you, both for you vote, and for taking part in 'sponsored democracy!"])
 
   name = candidate.candidate_name.toLowerCase().replace(/\b[a-z]/g, function(letter) { return letter.toUpperCase(); } );
 
   return salutation + " my name is " + name + ", and I am running for " +
-	  office + ". " + request + " you can be sure that my top priority " +
-	  "will be the best interests of " + topContributors[0] + 
-	  ", which " + biggest + ". Of course, I will also " + fighting +
-	  " " + topContributors[1] + ", which is my second biggest source of campaign cash. " +
-	  "If any legislation comes before me that benefits the " + 
-	  topIndustries[0] + " or " + topIndustries[1] + "industries, I will be sure to vote in favor, " +
-	  "since those two industries were the financial pillars of my campaign. " +
-	  thank;
+    office + ". " + request + " you can be sure that my top priority " +
+    "will be the best interests of " + topContributors[0] +
+    ", which " + biggest + ". Of course, I will also " + fighting +
+    " " + topContributors[1] + ", which is my second biggest source of campaign cash. " +
+    "If any legislation comes before me that benefits the " +
+    topIndustries[0] + " or " + topIndustries[1] + "industries, I will be sure to vote in favor, " +
+    "since those two industries were the financial pillars of my campaign. " +
+    thank;
   };
 });
