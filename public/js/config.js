@@ -15,7 +15,7 @@ require.config({
     "tpl": "/lib/tpl",
     "lodash": "/lib/lodash.min",
     "highcharts": "/lib/highcharts-all",
-    "jquery-slider": "/lib/jquery-ui-1.10.4.slider"
+    "jquery-slider": "/lib/jquery-ui-1.10.4.slider",
   },
 
   shim: {
