@@ -1,7 +1,18 @@
-// Module that converts an XML string to a JSON object
+/**
+ * Module that converts an XML Object to a JSON object.
+ *
+ * To use:
+ *   xml2json( $.parseXML('<foo><bar></bar></foo>'));
+ *
+ * or, if you have an endpoint that returns XML:
+ *   $.get('http://some.endpoint.com/that/gets/xml')
+ *   .done(function(xmlObj) {
+ *     console.log( xml2json(xmlObj));
+ *   });
+ */
 define(['jquery'], function($) {
   // gloriously copy-pasted from: http://davidwalsh.name/convert-xml-json
-  function xmlToJson(xml) {
+  return function xmlToJson(xml) {
 
     // Create the return object
     var obj = {};
@@ -37,10 +48,6 @@ define(['jquery'], function($) {
       }
     }
     return obj;
-  };
-
-  return function(xmlStr) {
-    return xmlToJson($.parseXML(xmlStr));
   };
 });
 
