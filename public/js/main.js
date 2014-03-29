@@ -61,7 +61,7 @@ function($, _, xml2json, CandidatesAPI, BasicGenerator) {
       console.log('');
       console.log('Helpful variables to check out in your console:');
 
-      window.fullCandidates = fullCandidates;
+      window.fullCandidates = _.values(fullCandidates);
       console.log('  fullCandidates: list of candidates objects.  .candidateMeta is full metadata, ' +
                   '.industries is top industries, .top_contributors is top contributors');
     });

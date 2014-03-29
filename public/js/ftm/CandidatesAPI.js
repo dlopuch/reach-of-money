@@ -23,7 +23,7 @@ define(['jquery', 'lodash', 'xml2json'], function($, _, xml2json) {
 
       $.get('http://api.followthemoney.org/candidates.list.php', _.extend({}, opts, {key: FTM_API_KEY}))
       .fail(function(xml) {
-        alert("Error getting candidates!");
+        alert("[CandidatesAPI.list] Error getting candidates!");
         console.log(xml);
         ret.reject(xml2json(xml));
       })
@@ -31,13 +31,35 @@ define(['jquery', 'lodash', 'xml2json'], function($, _, xml2json) {
         var results = xml2json(xml);
 
         if (results.error) {
-          alert('Error in API parameters');
+          alert('[CandidatesAPI.list] Error in API parameters');
           ret.reject(results.error['@attributes']);
           return;
         }
 
-        var candidatesList = results['candidates.list.php'].candidate.map(function(c) {
-          return c['@attributes'];
+        var candidatesList = results['candidates.list.php'].candidate.map(function(candidate) {
+          var c = candidate['@attributes'];
+
+          // parse number-ey text:
+          ['candidate_leadership_committee_dollars',
+           'candidate_money_dollars',
+           'individual_dollars',
+           'institution_dollars',
+           'non_contribution_income_dollars',
+           'party_committee_dollars',
+           'public_fund_dollars',
+           'total_contribution_records',
+           'total_dollars',
+           'total_in_state_dollars',
+           'total_out_of_state_dollars',
+           'total_unknown_state_dollars',
+           'unitemized_donation_dollars',
+           'year'
+          ].forEach(function(attr) {
+            c[attr] = parseInt(c[attr], 10);
+          });
+
+
+          return c;
         });
 
         ret.resolve(candidatesList);
