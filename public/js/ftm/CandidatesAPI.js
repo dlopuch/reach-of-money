@@ -83,6 +83,11 @@ define(['jquery', 'lodash', 'xml2json'], function($, _, xml2json) {
           return industry['@attributes'];
         });
 
+        if (opts.sort === 'total_dollars') {
+          // API docs lied.  total_dollars appears to be ascending sort, not descending.
+          industryList = industryList.reverse();
+        }
+
         ret.resolve(industryList);
       });
 
