@@ -24,7 +24,7 @@ define([
     render: function() {
       var candidate = this.options.candidateModel.candidateMeta;
 
-
+      this.$el.addClass('col-md-4');
       this.$el.html(CandidateViewTpl({
         prettyPrint: prettyPrint,
         n: numeral,

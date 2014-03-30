@@ -180,8 +180,25 @@ function(
 
       // USE MODELS TO MAKE CANDIDATE STORY VIEWS
       // ------------
-      _.values(fullCandidates).forEach(function(fc) {
-        $('#candidateBios').append(
+      var $curRow;
+      _.values(fullCandidates).forEach(function(fc, i) {
+        if (i % 3 === 0) {
+          $('#candidateBios').append($(
+            "<div >" +
+            "  <div class='col-md-12 bio-divider'>" +
+            "    <i class='fa fa-star'></i> " +
+            "    <i class='fa fa-flag'></i> " +
+            "    <i class='fa fa-star'></i> " +
+            "    <i class='fa fa-flag'></i> " +
+            "    <i class='fa fa-star'></i> " +
+            "  </div>" +
+            "</div>"
+          ));
+          $curRow = $('<div></div>').addClass('row');
+          $('#candidateBios').append($curRow);
+        }
+
+        $curRow.append(
           (new CandidateView({
             candidateModel: fc
           })).$el
