@@ -16,6 +16,7 @@ require.config({
     "underscore": "/lib/lodash.min",
     "highcharts": "/lib/highcharts-all",
     "jquery-slider": "/lib/jquery-ui-1.10.4.slider",
+    "numeral": "/lib/numeral.min"
   },
 
   shim: {
@@ -32,6 +33,9 @@ require.config({
     highcharts: {
       deps: ['jquery'],
       exports: "Highcharts"
+    },
+    numeral: {
+      exports: 'numeral'
     },
     "jquery-slider": {
       deps: ['jquery'],

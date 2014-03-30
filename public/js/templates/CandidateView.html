@@ -33,8 +33,18 @@ var SALUTATIONS = [
     <a href="http://www.followthemoney.org/database/StateGlance/candidate.phtml?c=<%= candidate.imsp_candidate_id %>"
        target="_blank">
       <%= candidatePrettyName %></a>,
-    and I am running for <%= prettyPrint(candidate.office) %>.
+    and I am running for <%= prettyPrint(candidate.office) %> under the <%= prettyPrint(candidate.party) %> party.
   </p>
+
+  <% if (candidate.total_dollars) { %>
+    <p>
+      Of the <%= n(candidate.total_dollars).format('$0,0')%> I raised,
+      <%= n(candidate.total_in_state_dollars / candidate.total_dollars).format('0%') %> was raised in-state.
+      <%= n(candidate.total_out_of_state_dollars / candidate.total_dollars).format('0%') %> of my funds are from
+      out-of-state, and <%= n(candidate.total_unknown_state_dollars / candidate.total_dollars).format('0%') %> is, er,
+      unclear.
+    </p>
+  <% } %>
 
   <% if (top_contributors.length) { %>
     <p>

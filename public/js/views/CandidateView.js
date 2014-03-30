@@ -1,8 +1,10 @@
 define([
   'backbone',
+  'numeral',
   'tpl!templates/CandidateView.html'
 ], function(
   Backbone,
+  numeral,
   CandidateViewTpl) {
 
   function prettyPrint(str) {
@@ -24,6 +26,8 @@ define([
 
       this.$el.html(CandidateViewTpl({
         prettyPrint: prettyPrint,
+        n: numeral,
+
         candidate: candidate,
         candidatePrettyName: prettyPrint(candidate.candidate_name.split(",").reverse().join(" ").trim()),
 
