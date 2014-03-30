@@ -25,7 +25,17 @@ var SALUTATIONS = [
       , "Thank you, and if you'd like me to support your interests, please make sure to make major donations to my " +
         "next campaign!"
       , "Thank you, both for you vote, and for taking part in 'sponsored democracy!'"
-    ];
+    ],
+    CONTRIBUTOR_TYPES = {
+      'candidate_leadership_committee_dollars': "the Candidate Leadership Committees",
+      'candidate_money_dollars'               : "Candidate Money",
+      'individual_dollars'                    : "Constituents Like You",
+      'institution_dollars'                   : "Institutional Dollars",
+      'non_contribution_income_dollars'       : "Non-Contribution Income",
+      'party_committee_dollars'               : "Party Money",
+      'public_fund_dollars'                   : "Public Funds",
+      'unitemized_donation_dollars'           : "Unitemized Donations"
+    }
 %>
 <div class="candidateBio">
   <p>
@@ -33,30 +43,63 @@ var SALUTATIONS = [
     <a href="http://www.followthemoney.org/database/StateGlance/candidate.phtml?c=<%= candidate.imsp_candidate_id %>"
        target="_blank">
       <%= candidatePrettyName %></a>,
-    and I am running for <%= prettyPrint(candidate.office) %> under the <%= prettyPrint(candidate.party) %> party.
+    and I am running for <%= prettyPrint(candidate.office) %> under the <%= prettyPrint(candidate.party) %> Party.
   </p>
 
   <% if (candidate.total_dollars) { %>
     <p>
-      Of the <%= n(candidate.total_dollars).format('$0,0')%> I raised,
+      Of the <b><%= n(candidate.total_dollars).format('$0,0')%></b> I raised,
       <%= n(candidate.total_in_state_dollars / candidate.total_dollars).format('0%') %> was raised in-state.
       <%= n(candidate.total_out_of_state_dollars / candidate.total_dollars).format('0%') %> of my funds are from
       out-of-state, and <%= n(candidate.total_unknown_state_dollars / candidate.total_dollars).format('0%') %> is, er,
       unclear.
+    </p>
+    <p>
       <% if (candidate.public_fund_dollars) { %>
         <%= n(candidate.public_fund_dollars / candidate.total_dollars).format('0%') %> came from public funding.
       <% } else { %>
-        I did not take any public funding.
+        I did not take any public funding.  Instead,
       <% } %>
+      I am primarily a candidate of
+      <b><%= CONTRIBUTOR_TYPES[contributorTypeBreakdownSorted[0].key] %></b> and
+      <b><%= CONTRIBUTOR_TYPES[contributorTypeBreakdownSorted[1].key] %></b>, with
+
+      <b><%= n(contributorTypeBreakdownSorted[0].value).format('$0,0') %></b> (
+      <%= n(contributorTypeBreakdownSorted[0].value / candidate.total_dollars).format('0%') %> ) and
+
+      <b><%= n(contributorTypeBreakdownSorted[1].value).format('$0,0') %></b> (
+      <%= n(contributorTypeBreakdownSorted[1].value / candidate.total_dollars).format('0%') %> )
+
+      of my funds raised as <%= CONTRIBUTOR_TYPES[contributorTypeBreakdownSorted[0].key] %> and
+      <%= CONTRIBUTOR_TYPES[contributorTypeBreakdownSorted[1].key] %>, respectively.
+    </p>
+    <p>
+      Only <b><%= n(candidate.individual_dollars).format('$0,0') %></b> (
+      <%= n(candidate.individual_dollars / candidate.total_dollars).format('0%') %>
+      ) came from <%= CONTRIBUTOR_TYPES.individual_dollars %>.
     </p>
   <% } %>
 
   <% if (top_contributors.length) { %>
     <p>
-      <%= choose(REQUESTS) %> you can be sure that my top priority will be the best interests of the
-      <%= prettyPrint(top_contributors[0].contributor_name) %>, which <%= choose(BIGGESTS) %>.
-      Of course, I will also <%= choose(FIGHTINGS) %> the <%= prettyPrint(top_contributors[1].contributor_name) %>,
-      who is my second biggest source of campaign cash.
+      <%= choose(REQUESTS) %> you can be sure that my top priority will be the best interests of
+
+      <% if (top_contributors[0].business_name === 'Uncoded') { %>
+        <b><%= prettyPrint(top_contributors[0].contributor_name) %></b>, who
+      <% } else { %>
+        the <b><%= prettyPrint(top_contributors[0].contributor_name) %></b>, which
+      <% } %>
+
+      <%= choose(BIGGESTS) %>.
+      Of course, I will also <%= choose(FIGHTINGS) %>
+
+      <% if (top_contributors[1].business_name === 'Uncoded') { %>
+        <b><%= prettyPrint(top_contributors[1].contributor_name) %></b>, who
+      <% } else { %>
+        the <b><%= prettyPrint(top_contributors[1].contributor_name) %></b>, which
+      <% } %>
+
+       is my second biggest source of campaign cash.
     </p>
   <% } %>
 
