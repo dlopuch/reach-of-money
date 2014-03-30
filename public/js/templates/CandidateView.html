@@ -89,7 +89,8 @@ var SALUTATIONS = [
     <p>
       <%= choose(REQUESTS) %> you can be sure that my top priority will be the best interests of
 
-      <% if (top_contributors[0].business_name === 'Uncoded') { %>
+      <% if (top_contributors[0].business_name === 'Uncoded' ||
+             top_contributors[0].business_name.search('candidate contributions to own campaign') > -1) { %>
         <b><%= prettyPrint(top_contributors[0].contributor_name) %></b>, who
       <% } else { %>
         the <b><%= prettyPrint(top_contributors[0].contributor_name) %></b>, which
@@ -98,7 +99,8 @@ var SALUTATIONS = [
       <%= choose(BIGGESTS) %>.
       Of course, I will also <%= choose(FIGHTINGS) %>
 
-      <% if (top_contributors[1].business_name === 'Uncoded') { %>
+      <% if (top_contributors[1].business_name === 'Uncoded' ||
+             top_contributors[1].business_name.search('candidate contributions to own campaign') > -1) { %>
         <b><%= prettyPrint(top_contributors[1].contributor_name) %></b>, who
       <% } else { %>
         the <b><%= prettyPrint(top_contributors[1].contributor_name) %></b>, which
