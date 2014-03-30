@@ -21,15 +21,13 @@ define(['jquery', 'underscore', 'xml2json'], function($, _, xml2json) {
 
       $.get('http://api.followthemoney.org/candidates.list.php', _.extend({}, opts, {key: FTM_API_KEY}))
       .fail(function(xml) {
-        alert("[CandidatesAPI.list] Error getting candidates!");
-        console.log(xml);
+        console.log("[CandidatesAPI.list] Error getting candidates!", xml);
         ret.reject(xml2json(xml));
       })
       .done(function(xml) {
         var results = xml2json(xml);
 
         if (results.error) {
-          alert('[CandidatesAPI.list] Error in API parameters');
           ret.reject(results.error['@attributes']);
           return;
         }
