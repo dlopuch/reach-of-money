@@ -46,15 +46,52 @@
 
 <body style="padding-left: 30px;">
 
-
-  <div id="criteriaSelection">
-    <select id="stateSelection"></select>
-    <select id="yearSelection"></select>
-    <select id="officeSelection"></select>
+  <div class="container" style="margin-bottom: 40px;">
+    <a class="btn btn-sm btn-primary" href="#race/CA/2010/governor">2010 CA Governor (Jerry Brown)</a>
+    <a class="btn btn-sm btn-primary" href="#race/CA/2010/senate/008">2010 CA Senate, D008 (Leeland Yee)</a>
+    <a class="btn btn-sm btn-primary" href="#race/CA/2006/senate/008">2006 CA Senate, D008 (Leeland Yee)</a>
+    <a class="btn btn-sm btn-primary" href="#race/WI/2010/governor">2010 WI Governor (Scott Walker)</a>
+    <a class="btn btn-sm btn-primary" href="#race/WI/2012/governor">2012 WI Governor (Scott Walker recall)</a>
+    <a class="btn btn-sm btn-primary" href="#race/NJ/2009/governor">2009 NJ Governor (Chris Christie)</a>
   </div>
 
-  <div id="candidate_bios_loading" class="container-fluid">
+  <div id="splash" class="container">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-2">
+        <p>
+          Have you ever heard of any political candidate who doesn't want to create jobs?  Listen to the TV enough and all
+          political stump speeches start to sound the same.  What do candidates <i>really</i> think?
+        </p>
+        <p>
+          What if candidates could speak their mind and tell you what they're really interested in?  Politicians help the
+          issues that brought them into office, and in today's environment money determines which issues are important.
+          Here we help candidates find their true voice by using their campaign contributions to generate a bio about
+          where their interests and priorities are likely to lie, as campaign contributions are what gets a politician
+          elected.
+        </p>
+        <img src="http://www.followthemoney.org/images/IMSP-color.jpg" style="float:right;">
+        <p>
+
+          Pick an example race above to get started.
+        </p>
+        <p>
+          Data provided by the National Institute on Money in State Politics at
+          <a href="http://www.followthemoney.org/">followthemoney.org.</a>
+
+        </p>
+
+      </div>
+    </div>
+  </div>
+
+
+  <div id="candidate_bios_loading" class="container-fluid" style="display:none;">
     Loading candidates, please wait...
+    <div class="progress progress-striped active" style="width: 300px">
+      <div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+        <span class="sr-only">Loading, please wait</span>
+      </div>
+    </div>
   </div>
   <div id="candidate_bios_error" class="container-fluid" style="display:none;">
     Error loading candidates.  Most likely rate limit.  Please wait and try again.

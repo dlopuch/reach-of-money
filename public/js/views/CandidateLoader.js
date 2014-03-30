@@ -1,4 +1,6 @@
 define(['views/CandidateView', 'ftm/CandidatesAPI'], function(CandidateView, CandidatesAPI) {
+  var yearStateOfficeCache = {};
+
   /**
    * Performs a search for candidates and then displays their bios.
    *
@@ -24,21 +26,76 @@ define(['views/CandidateView', 'ftm/CandidatesAPI'], function(CandidateView, Can
       };
     }
 
-    return tryLoadCandidate(candidateQuery, queryFilter, 5);
+    var results = $.Deferred();
+    $('#candidate_bios_error').hide();
+    $('#candidate_bios').hide();
+    $('#candidate_bios_loading').hide();
+
+    // See if we have the data cached
+    if (yearStateOfficeCache[candidateQuery.year + "_" + candidateQuery.state + "_" + candidateQuery.office
+                             + "_" + candidateQuery.district]) {
+      console.log("Cache hit!");
+      results.resolve(yearStateOfficeCache[candidateQuery.year + "_" + candidateQuery.state + "_" +
+                                           candidateQuery.office + "_" + candidateQuery.district]);
+
+    } else {
+      $('#candidate_bios_loading').show();
+
+      tryLoadCandidate(candidateQuery, queryFilter, 5)
+      .done(function(candidateModels) {
+        results.resolve(candidateModels);
+        yearStateOfficeCache[candidateQuery.year + "_" + candidateQuery.state + "_" +
+                             candidateQuery.office + "_" + candidateQuery.district] = candidateModels;
+      })
+      .fail(function(error) {
+        $('#candidate_bios_loading').hide();
+        $('#candidate_bios_error').show();
+
+        results.reject(error);
+      });
+    }
+
+    results
+    .done(function(candidateModels) {
+      // USE MODELS TO MAKE CANDIDATE STORY VIEWS
+      // ------------
+      $('#candidate_bios').empty();
+      var $curRow;
+      candidateModels.forEach(function(cm, i) {
+        if (i % 3 === 0) {
+          $('#candidate_bios').append($(
+            "<div >" +
+            "  <div class='col-md-12 bio-divider'>" +
+            "    <i class='fa fa-star'></i> " +
+            "    <i class='fa fa-flag'></i> " +
+            "    <i class='fa fa-star'></i> " +
+            "    <i class='fa fa-flag'></i> " +
+            "    <i class='fa fa-star'></i> " +
+            "  </div>" +
+            "</div>"
+          ));
+          $curRow = $('<div></div>').addClass('row');
+          $('#candidate_bios').append($curRow);
+        }
+
+        $curRow.append(
+          (new CandidateView({
+            candidateModel: cm
+          })).$el
+        );
+
+        $('#candidate_bios_loading').hide();
+        $('#candidate_bios').show();
+      });
+    });
+
+    return results.promise();
+
   }
 
   function tryLoadCandidate(candidateQuery, queryFilter, ttl) {
 
     var loadingDeferred = $.Deferred();
-
-    $('#candidate_bios_loading').show();
-    $('#candidate_bios').hide();
-    $('#candidate_bios_error').hide();
-
-    loadingDeferred.fail(function() {
-      $('#candidate_bios_loading').hide();
-      $('#candidate_bios_error').show();
-    });
 
     CandidatesAPI.list(candidateQuery)
     .fail(function(error) {
@@ -203,37 +260,6 @@ define(['views/CandidateView', 'ftm/CandidatesAPI'], function(CandidateView, Can
             from50to75PctContributions: from50to75PctContributions
           };
 
-        });
-
-
-        // USE MODELS TO MAKE CANDIDATE STORY VIEWS
-        // ------------
-        var $curRow;
-        _.values(fullCandidates).forEach(function(fc, i) {
-          if (i % 3 === 0) {
-            $('#candidate_bios').append($(
-              "<div >" +
-              "  <div class='col-md-12 bio-divider'>" +
-              "    <i class='fa fa-star'></i> " +
-              "    <i class='fa fa-flag'></i> " +
-              "    <i class='fa fa-star'></i> " +
-              "    <i class='fa fa-flag'></i> " +
-              "    <i class='fa fa-star'></i> " +
-              "  </div>" +
-              "</div>"
-            ));
-            $curRow = $('<div></div>').addClass('row');
-            $('#candidate_bios').append($curRow);
-          }
-
-          $curRow.append(
-            (new CandidateView({
-              candidateModel: fc
-            })).$el
-          );
-
-          $('#candidate_bios_loading').hide();
-          $('#candidate_bios').show();
         });
 
         loadingDeferred.resolve(_.values(fullCandidates));

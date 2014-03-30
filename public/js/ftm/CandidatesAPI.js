@@ -97,6 +97,10 @@ define(['jquery', 'underscore', 'xml2json'], function($, _, xml2json) {
           return;
         }
 
+        if (!Array.isArray(results['candidates.industries.php'].candidate_industry)) {
+          results['candidates.industries.php'].candidate_industry = [];
+        }
+
         var industryList = results['candidates.industries.php'].candidate_industry.map(function(industry) {
           var i = industry['@attributes'];
           i.total_contribution_records = parseInt(i.total_contribution_records, 10);
@@ -157,6 +161,10 @@ define(['jquery', 'underscore', 'xml2json'], function($, _, xml2json) {
           alert('[CandidatesAPI.top_contributors] Error in API parameters');
           ret.reject(results.error['@attributes']);
           return;
+        }
+
+        if (!Array.isArray(results['candidates.top_contributors.php'].top_contributor)) {
+          results['candidates.top_contributors.php'].top_contributor = [];
         }
 
         var topContributors = results['candidates.top_contributors.php'].top_contributor.map(function(contributor) {

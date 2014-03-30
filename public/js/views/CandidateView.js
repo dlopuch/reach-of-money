@@ -30,7 +30,9 @@ define([
         n: numeral,
 
         candidate: candidate,
-        candidatePrettyName: prettyPrint(candidate.candidate_name.split(",").reverse().join(" ").trim()),
+        candidatePrettyName: prettyPrint(candidate.candidate_name.search('&') > -1 ? // cludge to non-prettify 'a & b' names
+                                           candidate.candidate_name :
+                                           candidate.candidate_name.split(",").reverse().join(" ").trim()),
 
         top_contributors: this.options.candidateModel.top_contributors,
         industries: this.options.candidateModel.industries,

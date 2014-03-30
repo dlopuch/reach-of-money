@@ -71,7 +71,7 @@ var SALUTATIONS = [
     <% party_name = prettyPrint(candidate.party) %>
     <% if (party_name == "Democrat") { party_name = "Democratic"}  %>
 
-    <%= prettyPrint(candidate.state_name) %> as a member of the <%= party_name %> Party.
+    <%= prettyPrint(candidate.state_name) %> as a member of the <b><%= party_name %> Party</b>.
   </p>
 
   <% if (candidate.total_dollars) { %>
@@ -138,13 +138,13 @@ var SALUTATIONS = [
     <p>
       <% if (top50PctContributions.length === 1) { %>
         I don't have a lot of interests.  The vast majority of my finances come from
-        <b><%= top50PctContributions[0].sector_name %></b> 
+        <b><%= top50PctContributions[0].sector_name %></b>
         (<%= n(top50PctContributions[0].sector_contribution_pct).format('0%') %>).
         Rest assured that most of my attention will be indebted to the needs of those people.
 
       <% } else if (top50PctContributions.length === 2) { %>
         I have few interests, mostly <b><%= top50PctContributions[0].sector_name %></b> and
-        <b><%= top50PctContributions[1].sector_name %></b> 
+        <b><%= top50PctContributions[1].sector_name %></b>
         (<%= n(top50PctContributions[0].sector_contribution_pct).format('0%') %> and
         <%= n(top50PctContributions[1].sector_contribution_pct).format('0%') %> respectively) .
         I assure you that my attention will be split between those two sectors.
