@@ -54,9 +54,12 @@ function($, _, xml2json, CandidatesAPI, BasicGenerator, states) {
     .done(function() {
       _.values(fullCandidates).forEach(function(fc) {
         console.log(fc.candidateMeta.candidate_name, fc);
-
-        BasicGenerator(fc.candidateMeta, fc.top_contributors, fc.industries);
       });
+
+      _.values(fullCandidates).forEach(function(fc) {
+        console.log(BasicGenerator(fc.candidateMeta, fc.top_contributors, fc.industries));
+      });
+
 
       console.log('');
       console.log('Helpful variables to check out in your console:');
