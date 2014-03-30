@@ -24,24 +24,6 @@ define([
     render: function() {
       var candidate = this.options.candidateModel.candidateMeta;
 
-      // Use lodash chaining to get the contribution type breakdowns, largest contribution type on top
-      var contributorTypeBreakdownSorted = _([
-        'candidate_leadership_committee_dollars',
-        'candidate_money_dollars',
-        'individual_dollars',
-        'institution_dollars',
-        'non_contribution_income_dollars',
-        'party_committee_dollars',
-        'public_fund_dollars',
-        'unitemized_donation_dollars'
-      ])
-      .map(function(k) {
-        return {key: k, value: candidate[k]};
-      })
-      .sortBy(function(contrType) {
-        return -contrType.value;  // sortBy does ascending.  We want descending, so inverse for the comparison
-      })
-      .valueOf();
 
       this.$el.html(CandidateViewTpl({
         prettyPrint: prettyPrint,
@@ -52,8 +34,10 @@ define([
 
         top_contributors: this.options.candidateModel.top_contributors,
         industries: this.options.candidateModel.industries,
+        top50PctContributions: this.options.candidateModel.sectors.top50PctContributions || [],
+        from50to75PctContributions: this.options.candidateModel.sectors.from50to75PctContributions || [],
 
-        contributorTypeBreakdownSorted: contributorTypeBreakdownSorted
+        contributorTypeBreakdownSorted: this.options.candidateModel.contributorTypeBreakdownSorted
       }));
       return this;
     }

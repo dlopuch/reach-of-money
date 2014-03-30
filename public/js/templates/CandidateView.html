@@ -130,11 +130,48 @@ var SALUTATIONS = [
 
        is my second biggest individual source of campaign cash.
     </p>
+
+    <!-- Sectors -->
+    <p>
+      <% if (top50PctContributions.length === 1) { %>
+        I don't have a lot of interests.  The vast majority of my finances come from
+        <b><%= top50PctContributions[0].sector_name %></b> (
+        <%= n(top50PctContributions[0].sector_contribution_pct).format('0%') %> ).
+        Rest assured that most of my attention will be indebted to the needs of those people.
+
+      <% } else if (top50PctContributions.length === 2) { %>
+        I have few interests, mostly <b><%= top50PctContributions[0].sector_name %></b> and
+        <b><%= top50PctContributions[1].sector_name %></b> (
+        <%= n(top50PctContributions[0].sector_contribution_pct).format('0%') %> and
+        <%= n(top50PctContributions[1].sector_contribution_pct).format('0%') %> respectively ) .
+        I assure you that my attention will be split between those two sectors.
+      <% } else { %>
+        I have many varied interests!  My favorites are
+        <%= top50PctContributions.map(function(s, i, l) {
+              if (i === l.length - 1) {
+                return 'and <b>' + s.sector_name + '</b>';
+              } else {
+                return '<b>' + s.sector_name + '</b>';
+              }
+            }).join(', ') %>.
+      <% } %>
+      <% if (from50to75PctContributions.length) { %>
+        However, there are other sectors that are important to us as a nation.  Specifically, I also believe in supporting
+        <%= from50to75PctContributions.map(function(s, i, l) {
+              var comma = l.length >= 3 && i > 0 ? ', ' : ' ';
+              if (l.length > 1 && i === l.length - 1) {
+                return comma + ' and <b>' + s.sector_name + '</b> (' + n(s.sector_contribution_pct).format('0%') + ')';
+              } else {
+                return comma + '<b>' + s.sector_name + '</b> (' + n(s.sector_contribution_pct).format('0%') + ')';
+              }
+            }).join('') %>
+      <% } %>
+    </p>
   <% } %>
 
   <% if (!industries.length && !top_contributors.length) { %>
     <p>
-      Since I didn't raise any money, I am just running for what I believe in, and to find out more, please see my
+      Since I didn't raise any money, I am just running for what I believe in. To find out more, please see my
       campaign website and the <%= prettyPrint(candidate.party) %> party website for more information.
     </p>
   <% } else { %>

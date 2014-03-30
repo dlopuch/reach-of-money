@@ -66,7 +66,7 @@ function(
       );
     });
 
-    // wait for all the industries to be retrieved, then fullCandidates is ready.
+    // wait for all the industries and contributors to be retrieved, then fullCandidates models are ready.
     $.when.apply(this, detailsDeferreds)
     .done(function() {
 
@@ -77,6 +77,109 @@ function(
         console.log(fc.candidateMeta.candidate_name, fc);
       });
 
+
+      // ADDITIONAL MODEL CALCULATIONS
+      // -----------
+      fullCandidates.forEach(function(candidateModel) {
+
+        var candidate = candidateModel.candidateMeta;
+
+        // Use lodash chaining to get the contribution type breakdowns, largest contribution type on top
+        var contributorTypeBreakdownSorted = _([
+          'candidate_leadership_committee_dollars',
+          'candidate_money_dollars',
+          'individual_dollars',
+          'institution_dollars',
+          'non_contribution_income_dollars',
+          'party_committee_dollars',
+          'public_fund_dollars',
+          'unitemized_donation_dollars'
+        ])
+        .map(function(k) {
+          return {key: k, value: candidate[k]};
+        })
+        .sortBy(function(contrType) {
+          return -contrType.value;  // sortBy does ascending.  We want descending, so inverse for the comparison
+        })
+        .valueOf();
+
+        candidateModel.contributorTypeBreakdownSorted = contributorTypeBreakdownSorted;
+
+
+        // Aggregate industries by sector
+        var sectorContrsByIndustry = {};
+        candidateModel.industries.forEach(function(indRecord) {
+          // Make some sectors more friendly
+          if (indRecord.sector_name === 'Uncoded') {
+            indRecord.sector_name = 'Uncoded Contributions';
+          }
+          if (indRecord.industry_name === 'Uncoded') {
+            indRecord.industry_name = 'Uncoded Contributions';
+          }
+
+          var sector = sectorContrsByIndustry[indRecord.sector_name];
+          if (!sector) {
+            sector = sectorContrsByIndustry[indRecord.sector_name] = {
+              sector_name: indRecord.sector_name,
+              sector_dollars: 0,
+              industries_index: {}
+            };
+          }
+
+          sector.sector_dollars += indRecord.total_dollars;
+
+          if (!sector.industries_index[indRecord.industry_name]) {
+            sector.industries_index[indRecord.industry_name] = {
+              industry_name: indRecord.industry_name,
+              industry_dollars: indRecord.total_dollars
+            };
+          } else {
+            sector.industries_index[indRecord.industry_name].industry_dollars += indRecord.total_dollars;
+          }
+        });
+
+        var topSectors = _(sectorContrsByIndustry).values().sortBy(function(s) {return -s.sector_dollars;}).valueOf();
+        var cumulativeContributionPct = 0;
+        topSectors.forEach(function(s) {
+          s.sector_contribution_pct = s.sector_dollars / candidate.total_dollars;
+          s.cumulative_contribution_pct = cumulativeContributionPct += s.sector_contribution_pct;
+
+          s.top_industries = _(s.industries_index).values().sortBy(function(i) {return -i.industry_dollars; }).valueOf();
+        });
+
+        if (!topSectors.length) {
+          candidateModel.sectors = {}; // no funds raised.  Leave sectors schema empty.
+        } else {
+          // Get all the sectors that contribute to the top 50% of contributions
+          var top50PctContributions = [topSectors[0]],
+              from50to75PctContributions = [];
+          for (var i=1; i<topSectors.length; i++) {
+            if (topSectors[i].cumulative_contribution_pct < .50)
+              top50PctContributions.push(topSectors[i]);
+            else if (topSectors[i].cumulative_contribution_pct < .75)
+              from50to75PctContributions.push(topSectors[i]);
+            else
+              break;
+          }
+
+          // Add the next top sector to the 50-75% list if there's nothing there but the top50% doesn't go into the 75% range
+          if (!from50to75PctContributions.length &&
+              top50PctContributions[top50PctContributions.length - 1].cumulative_contribution_pct < .75) {
+            from50to75PctContributions.push(topSectors[top50PctContributions.length]);
+          }
+        }
+
+        candidateModel.sectors = {
+          topSectors: topSectors,
+          top50PctContributions: top50PctContributions,
+          from50to75PctContributions: from50to75PctContributions
+        };
+
+      });
+
+
+      // USE MODELS TO MAKE CANDIDATE STORY VIEWS
+      // ------------
       _.values(fullCandidates).forEach(function(fc) {
         $('#candidateBios').append(
           (new CandidateView({
