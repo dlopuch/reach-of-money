@@ -10,7 +10,13 @@ define(['backbone', 'views/CandidateLoader'], function(Backbone, CandidateLoader
       //'': 'loadRace',
       'race(/)': 'loadRace',
       'race/:state/:year/:office': 'loadRace',
-      'race/:state/:year/:office/:district': 'loadRace'
+      'race/:state/:year/:office/:district': 'loadRace',
+      'about': 'about'
+    },
+
+    about: function() {
+      $('#splash').show();
+      $('#candidate_bios').hide();
     },
 
     loadRace: function(state, year, office, district) {
