@@ -3,30 +3,47 @@ function choose(ary) {
   return ary[ _.random(ary.length - 1) ];
 }
 
+function cleaned_up(str) {
+  if (str.search(',') > -1) {
+    str = str.split(",").reverse().join(" ").trim();
+  }
+  return str;
+}
+
 var SALUTATIONS = [
         "Dear friends,"
       , "Dear constituent,"
       , "Hello friend,"
+      , "Romans, countrymen, lend me your ear: "
     ],
     REQUESTS = [
         "If you vote for me,"
       , "If you put your trust in me,"
+      , "If you believe in me,"
+      , "If you join me in this noble pursuit,"
     ],
     BIGGESTS = [
         "is my biggest individual campaign contributor"
       , "gave more money to my campaign than anyone else"
+      , "has been a real financial godsend to my campaign"
+      , "makes my candidacy possible"
     ],
     FIGHTINGS = [
         "be fighting hard for"
       , "be doing whatever I can to please"
       , "be giving 100% of my effort for"
-      , "be lending my attentive ear to "
+      , "be lending my attentive ear to"
+      , "be bending over backwards for"
+      , "be polishing apples for"
+      , "be spit-shining the boots of"
+      , "be sucking-up to"
+      , "be asking 'How high?' when told to jump by"
     ],
     THANKS = [
         "Thank you for helping me serve special interests to the best of my abilities!"
       , "Thank you, and if you'd like me to support your interests, please make sure to make major donations to my " +
         "next campaign!"
-      , "Thank you, both for you vote, and for taking part in 'sponsored democracy!'"
+      , "Thank you, both for your vote, and for taking part in 'sponsored democracy', whether you knew it or not!"
     ],
     CONTRIBUTOR_TYPES = {
       'candidate_leadership_committee_dollars': "the Candidate Leadership Committees",
@@ -45,8 +62,13 @@ var SALUTATIONS = [
     <a href="http://www.followthemoney.org/database/StateGlance/candidate.phtml?c=<%= candidate.imsp_candidate_id %>"
        target="_blank">
       <%= candidatePrettyName %></a>,
-    and I am running for <%= candidate.year %> <%= prettyPrint(candidate.office) %> of
-    <%= prettyPrint(candidate.state_name) %> under the <%= prettyPrint(candidate.party) %> Party.
+    and I am running for <%= prettyPrint(candidate.office) %> of
+
+    <!-- This seems to be the only party name that doesn't sounds right in front of "Party" -->
+    <% party_name = prettyPrint(candidate.party) %>
+    <% if (party_name == "Democrat") { party_name = "Democratic"}  %>
+
+    <%= prettyPrint(candidate.state_name) %> as a member of the <%= party_name %> Party.
   </p>
 
   <% if (candidate.total_dollars) { %>
@@ -91,9 +113,9 @@ var SALUTATIONS = [
 
       <% if (top_contributors[0].business_name === 'Uncoded' ||
              top_contributors[0].business_name.search('candidate contributions to own campaign') > -1) { %>
-        <b><%= prettyPrint(top_contributors[0].contributor_name) %></b>, who
+        <b><%= cleaned_up(prettyPrint(top_contributors[0].contributor_name)) %></b>, who
       <% } else { %>
-        the <b><%= prettyPrint(top_contributors[0].contributor_name) %></b>, which
+        the <b><%= cleaned_up(prettyPrint(top_contributors[0].contributor_name)) %></b>, which
       <% } %>
 
       <%= choose(BIGGESTS) %>.
@@ -101,9 +123,9 @@ var SALUTATIONS = [
 
       <% if (top_contributors[1].business_name === 'Uncoded' ||
              top_contributors[1].business_name.search('candidate contributions to own campaign') > -1) { %>
-        <b><%= prettyPrint(top_contributors[1].contributor_name) %></b>, who
+        <b><%= cleaned_up(prettyPrint(top_contributors[1].contributor_name)) %></b>, who
       <% } else { %>
-        the <b><%= prettyPrint(top_contributors[1].contributor_name) %></b>, which
+        the <b><%= cleaned_up(prettyPrint(top_contributors[1].contributor_name)) %></b>, which
       <% } %>
 
        is my second biggest individual source of campaign cash.
