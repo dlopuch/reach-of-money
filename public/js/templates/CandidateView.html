@@ -43,6 +43,11 @@ var SALUTATIONS = [
       <%= n(candidate.total_out_of_state_dollars / candidate.total_dollars).format('0%') %> of my funds are from
       out-of-state, and <%= n(candidate.total_unknown_state_dollars / candidate.total_dollars).format('0%') %> is, er,
       unclear.
+      <% if (candidate.public_fund_dollars) { %>
+        <%= n(candidate.public_fund_dollars / candidate.total_dollars).format('0%') %> came from public funding.
+      <% } else { %>
+        I did not take any public funding.
+      <% } %>
     </p>
   <% } %>
 

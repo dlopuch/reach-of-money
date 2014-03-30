@@ -61,6 +61,10 @@ function(
     // wait for all the industries to be retrieved, then fullCandidates is ready.
     $.when.apply(this, detailsDeferreds)
     .done(function() {
+
+      fullCandidates = _.sortBy(fullCandidates, function(c) {
+        return -c.candidateMeta.total_dollars;
+      });
       _.values(fullCandidates).forEach(function(fc) {
         console.log(fc.candidateMeta.candidate_name, fc);
       });
