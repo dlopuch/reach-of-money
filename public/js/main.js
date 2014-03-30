@@ -20,11 +20,19 @@ function(
   CandidatesAPI.list({
     state: 'CA',
     year: 2010,
-    office: 'ASSEMBLY',
-    district: '010'
+    office: 'GOVERNOR'
+
+    // Try this query if you keep on hitting rate limit:
+    //office: 'ASSEMBLY',
+    //district: '010'
   })
   .done(function(candidates) {
-    console.log("Got candidates for 2010 CA Assembly 010:");
+    candidates = candidates.filter(function(c) {
+      return c.office !== "LIEUTENANT GOVERNOR" && // API return Lt. Gov positions for 'governor' query
+             c.candidate_status.search('Primary Election') === -1; // limit to just general election candidates
+    });
+
+    console.log("Got " + candidates.length + " candidates for 2010 CA Governer:");
 
     var detailsDeferreds = [], // list of GET requests to grab all the details for each candidate
         fullCandidates = {};

@@ -13,12 +13,14 @@ var SALUTATIONS = [
       , "If you put your trust in me,"
     ],
     BIGGESTS = [
-        "is my biggest campaign contributor"
+        "is my biggest individual campaign contributor"
       , "gave more money to my campaign than anyone else"
     ],
     FIGHTINGS = [
-        "be fighting hard for", "doing whatever I can to please"
-      , "giving 100% of my effort for"
+        "be fighting hard for"
+      , "be doing whatever I can to please"
+      , "be giving 100% of my effort for"
+      , "be lending my attentive ear to "
     ],
     THANKS = [
         "Thank you for helping me serve special interests to the best of my abilities!"
@@ -43,7 +45,8 @@ var SALUTATIONS = [
     <a href="http://www.followthemoney.org/database/StateGlance/candidate.phtml?c=<%= candidate.imsp_candidate_id %>"
        target="_blank">
       <%= candidatePrettyName %></a>,
-    and I am running for <%= prettyPrint(candidate.office) %> under the <%= prettyPrint(candidate.party) %> Party.
+    and I am running for <%= candidate.year %> <%= prettyPrint(candidate.office) %> of
+    <%= prettyPrint(candidate.state_name) %> under the <%= prettyPrint(candidate.party) %> Party.
   </p>
 
   <% if (candidate.total_dollars) { %>
@@ -70,14 +73,16 @@ var SALUTATIONS = [
       <b><%= n(contributorTypeBreakdownSorted[1].value).format('$0,0') %></b> (
       <%= n(contributorTypeBreakdownSorted[1].value / candidate.total_dollars).format('0%') %> )
 
-      of my funds raised as <%= CONTRIBUTOR_TYPES[contributorTypeBreakdownSorted[0].key] %> and
-      <%= CONTRIBUTOR_TYPES[contributorTypeBreakdownSorted[1].key] %>, respectively.
+      raised, respectively.
     </p>
-    <p>
-      Only <b><%= n(candidate.individual_dollars).format('$0,0') %></b> (
-      <%= n(candidate.individual_dollars / candidate.total_dollars).format('0%') %>
-      ) came from <%= CONTRIBUTOR_TYPES.individual_dollars %>.
-    </p>
+    <% if (contributorTypeBreakdownSorted[0].key !== 'individual_dollars' &&
+           contributorTypeBreakdownSorted[1].key !== 'individual_dollars') { %>
+      <p>
+        Only <b><%= n(candidate.individual_dollars).format('$0,0') %></b> (
+        <%= n(candidate.individual_dollars / candidate.total_dollars).format('0%') %>
+        ) came from <%= CONTRIBUTOR_TYPES.individual_dollars %>.
+      </p>
+    <% } %>
   <% } %>
 
   <% if (top_contributors.length) { %>
@@ -99,7 +104,7 @@ var SALUTATIONS = [
         the <b><%= prettyPrint(top_contributors[1].contributor_name) %></b>, which
       <% } %>
 
-       is my second biggest source of campaign cash.
+       is my second biggest individual source of campaign cash.
     </p>
   <% } %>
 
