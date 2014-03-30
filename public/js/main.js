@@ -1,5 +1,5 @@
-define(['jquery', 'lodash', 'xml2json', 'ftm/CandidatesAPI', 'speechGenerators/BasicGenerator'],
-function($, _, xml2json, CandidatesAPI, BasicGenerator) {
+define(['jquery', 'lodash', 'xml2json', 'ftm/CandidatesAPI', 'speechGenerators/BasicGenerator', 'states'],
+function($, _, xml2json, CandidatesAPI, BasicGenerator, states) {
   // set some globals
   window.FTM_API_KEY = '496398adcf0ab6761dc2af1987c58fd2';
   window.xml2json = xml2json;
@@ -68,4 +68,47 @@ function($, _, xml2json, CandidatesAPI, BasicGenerator) {
 
 
   });
+
+  var statesSelect = $('select#stateSelection');
+  for (key in states) {
+    var option = document.createElement('option');
+    option.value = key;
+
+    option.appendChild(document.createTextNode(states[key]));
+    statesSelect.append(option);
+  }
+
+  var currentYear = new Date().getFullYear();
+  var minYear = 1998;
+
+  var yearSelect = $('select#yearSelection');
+  for (currentYear; currentYear >= minYear; currentYear--) {
+    var option = document.createElement('option');
+    option.value = currentYear;
+
+    option.appendChild(document.createTextNode(currentYear));
+    yearSelect.append(option);
+  }
+
+  var offices = [
+    'GOVERNOR',
+    'ASSEMBLY',
+    'CONTROLLER',
+    'SECRETARY_OF STATE',
+    'INSURANCE_COMMISSIONER',
+    'SENATE',
+    'LIEUTENANT_GOVERNOR',
+    'TREASURER',
+    'ATTORNEY_GENERAL'
+  ];
+
+  var officeSelect = $('select#officeSelection');
+  for (var i = 0, len = offices.length; i < len; i++) {
+      var office = offices[i];
+      var option = document.createElement('option');
+      option.value = office;
+
+      option.appendChild(document.createTextNode(office.replace("_", " ")));
+      officeSelect.append(option);
+  }
 });
