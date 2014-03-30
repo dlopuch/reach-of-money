@@ -11,15 +11,18 @@ function cleaned_up(str) {
 }
 
 var SALUTATIONS = [
-        "Dear friends,"
-      , "Dear constituent,"
-      , "Hello friend,"
-      , "Romans, countrymen, lend me your ear: "
+        "Dear friends, my"
+      , "Dear constituent, my"
+      , "Salutations! My",
+      , "Hello friend, my"
+      , "Romans, countrymen, lend me your ears: my "
     ],
     REQUESTS = [
         "If you vote for me,"
       , "If you put your trust in me,"
       , "If you believe in me,"
+      , "If you believe me when I tell you I don't take part in international arms deals,"
+      , "If you trust me more than then trusted Bernie Madoff,"
       , "If you join me in this noble pursuit,"
     ],
     BIGGESTS = [
@@ -58,7 +61,7 @@ var SALUTATIONS = [
 %>
 <div class="candidateBio">
   <p>
-    <%= choose(SALUTATIONS) %> my name is
+    <%= choose(SALUTATIONS) %> name is
     <a href="http://www.followthemoney.org/database/StateGlance/candidate.phtml?c=<%= candidate.imsp_candidate_id %>"
        target="_blank">
       <%= candidatePrettyName %></a>,
