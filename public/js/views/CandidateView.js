@@ -1,11 +1,13 @@
 define([
   'backbone',
-  'speechGenerators/BasicGenerator',
   'tpl!templates/CandidateView.html'
 ], function(
   Backbone,
-  BasicGenerator,
   CandidateViewTpl) {
+
+  function prettyPrint(str) {
+    return str.toLowerCase().replace(/\b[a-z]/g, function(letter) { return letter.toUpperCase(); } ).trim();
+  };
 
   var count = 0;
   return Backbone.View.extend({
@@ -18,12 +20,15 @@ define([
       this.render();
     },
     render: function() {
-      var paragraphs = BasicGenerator(this.options.candidateModel.candidateMeta,
-                                      this.options.candidateModel.top_contributors,
-                                      this.options.candidateModel.industries);
+      var candidate = this.options.candidateModel.candidateMeta;
 
       this.$el.html(CandidateViewTpl({
-        paragraphs: paragraphs
+        prettyPrint: prettyPrint,
+        candidate: candidate,
+        candidatePrettyName: prettyPrint(candidate.candidate_name.split(",").reverse().join(" ").trim()),
+
+        top_contributors: this.options.candidateModel.top_contributors,
+        industries: this.options.candidateModel.industries
       }));
       return this;
     }

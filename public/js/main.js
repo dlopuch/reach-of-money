@@ -11,7 +11,7 @@ function(
   CandidateView,
   states) {
   // set some globals
-  window.FTM_API_KEY = '496398adcf0ab6761dc2af1987c58fd2';
+  window.FTM_API_KEY = '4ed5bac2a60606b2e254a958317e1af3';
   window.xml2json = xml2json;
 
   window.CandidatesAPI = CandidatesAPI;

@@ -1,7 +1,57 @@
+<%
+function choose(ary) {
+  return ary[ _.random(ary.length - 1) ];
+}
+
+var SALUTATIONS = [
+        "Dear friends,"
+      , "Dear constituent,"
+      , "Hello friend,"
+    ],
+    REQUESTS = [
+        "If you vote for me,"
+      , "If you put your trust in me,"
+    ],
+    BIGGESTS = [
+        "is my biggest campaign contributor"
+      , "gave more money to my campaign than anyone else"
+    ],
+    FIGHTINGS = [
+        "be fighting hard for", "doing whatever I can to please"
+      , "giving 100% of my effort for"
+    ],
+    THANKS = [
+        "Thank you for helping me serve special interests to the best of my abilities!"
+      , "Thank you, and if you'd like me to support your interests, please make sure to make major donations to my " +
+        "next campaign!"
+      , "Thank you, both for you vote, and for taking part in 'sponsored democracy!'"
+    ];
+%>
 <div class="candidateBio">
-  <% _.each(paragraphs, function(p) { %>
+  <p>
+    <%= choose(SALUTATIONS) %> my name is
+    <a href="http://www.followthemoney.org/database/StateGlance/candidate.phtml?c=<%= candidate.imsp_candidate_id %>"
+       target="_blank">
+      <%= candidatePrettyName %></a>,
+    and I am running for <%= prettyPrint(candidate.office) %>.
+  </p>
+
+  <% if (top_contributors.length) { %>
     <p>
-      <%= p %>
+      <%= choose(REQUESTS) %> you can be sure that my top priority will be the best interests of the
+      <%= prettyPrint(top_contributors[0].contributor_name) %>, which <%= choose(BIGGESTS) %>.
+      Of course, I will also <%= choose(FIGHTINGS) %> the <%= prettyPrint(top_contributors[1].contributor_name) %>,
+      who is my second biggest source of campaign cash.
     </p>
-  <% }); %>
+  <% } %>
+
+  <% if (!industries.length && !top_contributors.length) { %>
+    <p>
+      Since I didn't raise any money, I am just running for what I believe in, and to find out more, please see my
+      campaign website and the <%= prettyPrint(candidate.party) %> party website for more information.
+    </p>
+  <% } else { %>
+    <%= choose(THANKS) %>
+  <% } %>
+
 </div>
