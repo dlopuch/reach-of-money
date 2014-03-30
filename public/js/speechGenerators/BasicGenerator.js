@@ -1,6 +1,11 @@
 define([], function() {
+
   function choose(ary) {
      return ary[ Math.floor( Math.random() * ary.length) ]
+  }
+
+  function initialize(str) {
+     return str.toLowerCase().replace(/\b[a-z]/g, function(letter) { return letter.toUpperCase(); } )
   }
 
   var SALUTATIONS = [
@@ -67,7 +72,7 @@ define([], function() {
 //   total_contribution_records: "273"
 //   total_dollars: "2576819"
 
-// Object
+// TopContributors Object
 //   business_name: "Democratic Party committees"
 //   contribution_ranking: 1
 //   contributor_name: "CALIFORNIA DEMOCRATIC PARTY"
@@ -87,16 +92,37 @@ define([], function() {
       "Thank you, and if you'd like me to support your interests, please make sure to make major donations to my next campaign!",
       "Thank you, both for you vote, and for taking part in 'sponsored democracy!"])
 
-  name = candidate.candidate_name.toLowerCase().replace(/\b[a-z]/g, function(letter) { return letter.toUpperCase(); } );
+  name = initialize(candidate.candidate_name.split(",").reverse().join(" ").trim())
 
-  return salutation + " my name is " + name + ", and I am running for " +
-    office + ". " + request + " you can be sure that my top priority " +
-    "will be the best interests of " + topContributors[0] +
-    ", which " + biggest + ". Of course, I will also " + fighting +
-    " " + topContributors[1] + ", which is my second biggest source of campaign cash. " +
-    "If any legislation comes before me that benefits the " +
-    topIndustries[0] + " or " + topIndustries[1] + "industries, I will be sure to vote in favor, " +
-    "since those two industries were the financial pillars of my campaign. " +
-    thank;
-  };
+//   contributor_name: "CALIFORNIA DEMOCRATIC PARTY"
+//   percent_of_total_contribution_records: 33.7
+//   percent_of_total_total_dollars: 57.1
+//   total_contribution_records: 247
+//   total_dollars: 1926107
+
+//   contributor_name: "CALIFORNIA DEMOCRATIC PARTY"
+
+  para = [];
+
+  para.push (salutation + " my name is " + name + ", and I am running for " +
+	     initialize(candidate.office) + ". ");
+
+  if (topContributors.length > 1) {
+      para.push (request + " you can be sure that my top priority " +
+		 "will be the best interests of the " + initialize(topContributors[0].contributor_name) +
+		 ", which " + biggest + ". Of course, I will also " + fighting +
+		 " the " + initialize(topContributors[1].contributor_name) +
+		 ", which is my second biggest source of campaign cash. ");
+  }
+
+  if (topIndustries.length <= 1 && topContributors.length <= 1) {
+      para.push ("Since I didn't raise any money, I am just running for what I believe in, " +
+		 "and to find out more, please see my campaign website and the " +
+		 initialize(candidate.party) + " party website for more information.")
+  } else {
+      para.push (thank);
+  }
+
+  return para.join(" ");
+ };
 });
