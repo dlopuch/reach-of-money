@@ -132,6 +132,6 @@ define([], function() {
     para.push(choose(THANKS));
   }
 
-  return para.join(" ");
+  return para;
  };
 });

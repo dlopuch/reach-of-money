@@ -1,4 +1,4 @@
-define(['jquery', 'lodash', 'xml2json'], function($, _, xml2json) {
+define(['jquery', 'underscore', 'xml2json'], function($, _, xml2json) {
   return {
     /**
      * List candidates
@@ -16,8 +16,6 @@ define(['jquery', 'lodash', 'xml2json'], function($, _, xml2json) {
         opts.year = 2010;
       if (!opts.office)
         throw new Error('office required');
-      if (!opts.district)
-        throw new Error('district required');
 
       var ret = $.Deferred();
 

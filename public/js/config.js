@@ -13,12 +13,16 @@ require.config({
     "d3": "/lib/d3.v3.3.2.min",
     "bootstrap": "/lib/bootstrap_232/js/bootstrap.min",
     "tpl": "/lib/tpl",
-    "lodash": "/lib/lodash.min",
+    "underscore": "/lib/lodash.min",
     "highcharts": "/lib/highcharts-all",
     "jquery-slider": "/lib/jquery-ui-1.10.4.slider",
   },
 
   shim: {
+    backbone: {
+      deps: ['jquery', 'underscore'],
+      exports: 'Backbone'
+    },
     bootstrap: {
       deps: ['jquery']
     },

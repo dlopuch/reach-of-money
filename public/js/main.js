@@ -1,11 +1,20 @@
-define(['jquery', 'lodash', 'xml2json', 'ftm/CandidatesAPI', 'speechGenerators/BasicGenerator', 'states'],
-function($, _, xml2json, CandidatesAPI, BasicGenerator, states) {
+define([
+  'jquery', 'underscore',
+  'xml2json',
+  'ftm/CandidatesAPI',
+  'views/CandidateView',
+  'states'],
+function(
+  $, _,
+  xml2json,
+  CandidatesAPI,
+  CandidateView,
+  states) {
   // set some globals
   window.FTM_API_KEY = '496398adcf0ab6761dc2af1987c58fd2';
   window.xml2json = xml2json;
 
   window.CandidatesAPI = CandidatesAPI;
-  window.BasicGenerator = BasicGenerator;
 
   // examples
   CandidatesAPI.list({
@@ -57,7 +66,11 @@ function($, _, xml2json, CandidatesAPI, BasicGenerator, states) {
       });
 
       _.values(fullCandidates).forEach(function(fc) {
-        console.log(BasicGenerator(fc.candidateMeta, fc.top_contributors, fc.industries));
+        $('#candidateBios').append(
+          (new CandidateView({
+            candidateModel: fc
+          })).$el
+        );
       });
 
 
