@@ -48,7 +48,7 @@
 
 </head>
 
-<body style="padding-left: 30px;">
+<body>
 
   <div class="container" style="margin-bottom: 40px;">
     <a class="btn btn-sm btn-primary" href="#race/CA/2010/governor">2010 CA Governor (Jerry Brown)</a>
@@ -64,25 +64,55 @@
     <div class="row">
       <div class="col-md-6 col-md-offset-2">
         <p>
-          Have you ever heard of any political candidate who doesn't want to create jobs?  Listen to the TV enough and all
-          political stump speeches start to sound the same.  What do candidates <i>really</i> think?
+          We have a problem in politics today: money.  It doesn't have a voice.  Hundreds of millions of it is
+          poured into individual races, but you never hear politicians expressing what is important to money.  Instead,
+          all you hear is talk of jobs and well-being, as if that was important.  No airtime is being spent on the
+          important issues.
         </p>
         <p>
-          What if candidates could speak their mind and tell you what they're really interested in?  Politicians help the
-          issues that brought them into office, and in today's environment money determines which issues are important.
-          Here we help candidates find their true voice by using their campaign contributions to generate a bio about
-          where their interests and priorities are likely to lie, as campaign contributions are what gets a politician
-          elected.
+          In this project, built for the
+          <a href="http://www.eventbrite.com/e/hack-for-democracy-registration-10711042015">Hack for Democracy</a>
+          San Francisco weekend hackaton, we give voice to the neglected money in politics.  What if candidates could
+          speak up for their contributions' priorities?  We look up public records on candidates' campaign contributions
+          and use them to helpfully auto-generate a short biography expressing the candidate's true voice, as defined by
+          the political quid pro debt taken on by his or her various contributions.
         </p>
-        <img src="http://www.followthemoney.org/images/IMSP-color.jpg" style="float:right;">
+        <a href="http://www.followthemoney.org/" target="_blank">
+          <img src="http://www.followthemoney.org/images/IMSP-color.jpg" style="float:right;">
+        </a>
         <p>
 
           Pick an example race above to get started.
         </p>
         <p>
           Data provided by the National Institute on Money in State Politics at
-          <a href="http://www.followthemoney.org/">followthemoney.org.</a>
-
+          <a href="http://www.followthemoney.org/" target="_blank">followthemoney.org</a> and subject to their API conditions.
+        </p>
+        <p>
+          To help money find it's true voice in politics, check out the various groups that made this
+          hackathon possible:
+          <ul>
+            <li>
+              <a href="https://www.yesfairelections.org/contacts/civicrm/contribute/transact?reset=1&id=26">
+              Team Democracy</a>: a small group of folks in the San Francisco Bay area who have been working together
+              for nearly a year to explore how design, technology, and marketing solutions could support the movement
+              to restore our representative democracy.
+            </li>
+            <li>
+              The <a href="http://nhrebellion.org/" target="_blank">New Hampshire Rebellion</a>: asking candidates just
+              one question, the First Question.
+            </li>
+            <li>
+              The <a href="http://www.caclean.org/" target="_blank">California Clean Money Campaign</a>: sponsoring
+              SB 52, the California DISCLOSE Act, to disclose in a clear and no-nonsense way who really pays for
+              political ads.  Read more at <a href="http://www.yesfairelections.org/" target="_blank">
+              yesfairelections.org</a>.
+            </li>
+          </ul>
+          Help money find it's true voice by forking this project on
+          <a href="https://github.com/dlopuch/voice-of-money" target="_blank"><i class="fa fa-github"></i> Github</a>.
+          Released under the GPLv2. Thanks to <a href="https://github.com/gcoladon" target="_blank">Greg Coladonato</a>
+          and <a href="https://github.com/muj" target="_blank">Mujtaba Arshad</a> for the project contributions.
         </p>
 
       </div>
@@ -99,7 +129,9 @@
     </div>
   </div>
   <div id="candidate_bios_error" class="container-fluid" style="display:none;">
-    Error loading candidates.  Most likely rate limit.  Please wait and try again.
+    Error loading candidates.  Most likely rate limit.  Please wait and try again.<br/><br/>
+    (<a href="http://www.followthemoney.org/" target="_blank">followthemoney.org</a> only allows about one campaign
+    per minute interval)
   </div>
   <div id="candidate_bios" class="container-fluid" style="display:none;">
 
