@@ -1,11 +1,19 @@
-define(['jquery', 'd3', 'data/statepaths', 'models/ContributionsService'],
-function($, d3, statepaths, ContributionsService) {
+define(['jquery', 'underscore', 'd3', 'data/statepaths', 'models/ContributionsService'],
+function($, _, d3, statepaths, ContributionsService) {
 
   var statesMapDone = $.Deferred();
 
-  var contributionColorScale;
+  var contributionColorScale,
+      outgoingContribsByState,
+      incomingContribsByState,
+      totalContribsColorScale;
+
   ContributionsService.getReadyPromise().done(function() {
+
     contributionColorScale = ContributionsService.getContributionsScaleStub().range(['lightgrey', "#cfc"]);
+    outgoingContribsByState = ContributionsService.getStateTotalContributions(true);
+    incomingContribsByState = ContributionsService.getStateTotalContributions(false);
+    totalContribsColorScale = ContributionsService.getTotalContributionsScaleStub().range(['lightgrey', 'red']);
   });
 
 
@@ -37,10 +45,20 @@ function($, d3, statepaths, ContributionsService) {
 
   };
 
-  var onStateHoverOff = function(d) {
+  window.onStateHoverOff = function() {
+    var data;
+    if (ContributionsService.isOutgoingMode()) {
+      data = outgoingContribsByState;
+    } else {
+      data = incomingContribsByState;
+    }
+
     // Color all states default color
     d3.selectAll('#statecontainer svg > g > path')
-    .attr('fill','lightgrey');
+    .data(data, function(d, i) { return d.id; })
+    .attr('fill', function(d) {
+      return totalContribsColorScale(d.sumContributions < 1 ? 1 : d.sumContributions);
+    });
   };
 
   var highlightCircleG, highlightCirclePath;
@@ -94,33 +112,37 @@ function($, d3, statepaths, ContributionsService) {
 
   var d = [],
       stateIdx = {};
-  for (var k in statepaths) {
-    if (!statepaths.hasOwnProperty(k)) continue;
-    stateIdx[k] = {
-      id: k,
-      path: statepaths[k],
+  _.forOwn(statepaths, function(path, stateKey) {
+    stateIdx[stateKey] = {
+      id: stateKey,
+      path: path
     };
-    d.push(stateIdx[k]);
-  }
+    d.push(stateIdx[stateKey]);
+  });
 
-  var p = g.selectAll('path').data(d);
+  ContributionsService.getReadyPromise().done(function() {
 
-  p.enter().append('path')
-    .attr('id', function(d) {return 'US_' + d.id;})
-    .attr('fill', 'lightgrey')
-    .attr('d', function(d) { return d.path; })
-    .attr('stroke', 'rgba(0,0,0,1)')
-    .attr('opacity',1)
-    .attr('transform', 'translate(1000,1000)scale(0)translate(-1000,-1000)')
-    .on("mouseover", onStateHover)
-    .on("mouseout", onStateHoverOff);
+    var p = g.selectAll('path').data(d);
 
-  p.transition().duration(500)
-                .delay(function(d, i) { return i * 10; })
-                .attr('opacity', 1)
-                .attr('transform', 'translate(900,300)scale(1)translate(-900,-300)');
+    p.enter().append('path')
+      .attr('id', function(d) {return 'US_' + d.id;})
+      .attr('fill', 'lightgrey')
+      .attr('d', function(d) { return d.path; })
+      .attr('stroke', 'rgba(0,0,0,1)')
+      .attr('opacity',1)
+      .attr('transform', 'translate(1000,1000)scale(0)translate(-1000,-1000)')
+      .on("mouseover", onStateHover)
+      .on("mouseout", onStateHoverOff);
 
-  statesMapDone.resolve();
+    onStateHoverOff();
+
+    p.transition().duration(500)
+                  .delay(function(d, i) { return i * 10; })
+                  .attr('opacity', 1)
+                  .attr('transform', 'translate(900,300)scale(1)translate(-900,-300)');
+
+    statesMapDone.resolve();
+  });
 
   return statesMapDone;
 });

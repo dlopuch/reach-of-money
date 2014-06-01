@@ -8,6 +8,8 @@ define([
 
     ContributionsService.switchToIncomingMode();
     console.log(ContributionsService.switchToIncomingMode);
+
+    onStateHoverOff(); // cludge accessing leaked method in statesMap
   });
 
   $('.outgoing').click(function() {
@@ -15,6 +17,8 @@ define([
 
     ContributionsService.switchToOutgoingMode();
     console.log(ContributionsService.switchToOutgoingMode);
+
+    onStateHoverOff(); //cludge accessing leaked method in statesMap
   });
 
 });

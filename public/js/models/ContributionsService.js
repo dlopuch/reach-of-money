@@ -14,8 +14,14 @@ define([
       /** Given a state ID, maps to an array of all contributions coming into that state. */
       incomingContributionsByStateIdx,
 
+      sumOutgoingContributionsByStateIdx,
+      sumIncomingContributionsByStateIdx,
+
       minContributionUSD = Infinity,
-      maxContributionUSD = -Infinity;
+      maxContributionUSD = -Infinity,
+
+      minSumStateContributions = Infinity,
+      maxSumStateContributions = -Infinity;
 
   /**
    * @module ContributionsService
@@ -98,6 +104,29 @@ define([
      */
     getContributionsScaleStub: function() {
       return d3.scale.linear().domain([0, maxContributionUSD]);
+    },
+
+    getTotalContributionsScaleStub: function() {
+      return d3.scale.log().domain([minSumStateContributions, maxSumStateContributions]);
+    },
+
+    getStateTotalContributions: function(outgoingContribs) {
+      var output = [],
+          index;
+      if (outgoingContribs) {
+        index = sumOutgoingContributionsByStateIdx;
+      } else {
+        index = sumIncomingContributionsByStateIdx;
+      }
+
+      _.forOwn(index, function(amount, stateKey) {
+        output.push({
+          id: stateKey,
+          sumContributions: amount
+        });
+      });
+
+      return output;
     }
   };
 
@@ -114,12 +143,17 @@ define([
     outgoingContributionsByStateIdx = {};
     incomingContributionsByStateIdx = {};
 
+    sumOutgoingContributionsByStateIdx = {};
+    sumIncomingContributionsByStateIdx = {};
+
     var stateId;
     contribs.forEach(function(c) {
       // Outgoing contributions
       stateId = c.donor_state || 'none';
-      if (!outgoingContributionsByStateIdx[stateId])
+      if (!outgoingContributionsByStateIdx[stateId]) {
         outgoingContributionsByStateIdx[stateId] = [];
+        sumOutgoingContributionsByStateIdx[stateId] = 0;
+      }
 
       outgoingContributionsByStateIdx[stateId].push({
         id: c.candidates_state,
@@ -127,11 +161,15 @@ define([
         amount_usd: c.total_amount
       });
 
+      sumOutgoingContributionsByStateIdx[stateId] += c.total_amount;
+
 
       // Incoming contributions
       stateId = c.candidates_state;
-      if (!incomingContributionsByStateIdx[stateId])
+      if (!incomingContributionsByStateIdx[stateId]) {
         incomingContributionsByStateIdx[stateId] = [];
+        sumIncomingContributionsByStateIdx[stateId] = 0;
+      }
 
       incomingContributionsByStateIdx[stateId].push({
         id: c.donor_state || 'none',
@@ -139,12 +177,28 @@ define([
         amount_usd: c.total_amount
       });
 
+      sumIncomingContributionsByStateIdx[stateId] += c.total_amount;
+
 
       // min and max for scales
       if (c.total_amount > maxContributionUSD)
         maxContributionUSD = c.total_amount;
       if (c.total_amount < minContributionUSD)
         minContributionUSD = c.total_amount;
+    });
+
+    _.forOwn(sumIncomingContributionsByStateIdx, function(amount, stateKey) {
+      if (stateKey === 'PR' ||
+          stateKey === 'GU' ||
+          stateKey === 'VI' ||
+          stateKey === 'MP') {
+        return;
+      }
+
+      if (amount < minSumStateContributions && amount > 0)
+        minSumStateContributions = amount;
+      if (amount > maxSumStateContributions)
+        maxSumStateContributions = amount;
     });
 
     readyDeferred.resolve(ContributionsService);
