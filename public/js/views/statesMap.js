@@ -12,7 +12,7 @@ ContributionsService.getReadyPromise().done(function() {
     // TODO call contributionsService to get list of states to select.
     console.log("d is "+ JSON.stringify(d));
     console.log("you have moused over " + d.id);
-    var nodeSelection = d3.select(this).style({opacity:'0.8'}).attr('fill','red');
+    // var nodeSelection = d3.select(this).style({opacity:'0.8'}).attr('fill','red');
     ContributionsService.getReadyPromise().done(function() {
       console.log(ContributionsService.getContributionsByState(d.id));
       otherStates = ContributionsService.getContributionsByState(d.id);
@@ -23,7 +23,7 @@ ContributionsService.getReadyPromise().done(function() {
     console.log('otherStatesSelection = ' + otherStatesSelection);
 
 
-    otherStatesColor = ContributionsService.getContributionsScaleStub().range(['white', 'green']);
+    otherStatesColor = ContributionsService.getContributionsScaleStub().range(["#8f8", "#cfc"]);
 
     console.log('d = ' + JSON.stringify(d));
     console.log('otherStates.contributions =' + JSON.stringify(otherStates.contributions));
@@ -38,7 +38,7 @@ ContributionsService.getReadyPromise().done(function() {
     otherStatesSelection.exit()
     .attr('fill', 'lightgrey');
 
-
+    var nodeSelection = d3.select(this).style({opacity:'1.0'}).attr('fill','red');
 
   };
 
@@ -57,7 +57,8 @@ ContributionsService.getReadyPromise().done(function() {
     // foo = ContributionsService.getContributionsScaleStub();
     // foo.range(['grey', 'red']);
     console.log('otherStatesSelection = ' + otherStatesSelection);
-    otherStatesSelection.attr('fill','grey');
+    otherStatesSelection.attr('fill','lightgrey');
+    var nodeSelection = d3.select(this).style({opacity:'1.0'}).attr('fill','lightgrey');
   };
 
   var highlightCircleG, highlightCirclePath;
@@ -125,9 +126,9 @@ ContributionsService.getReadyPromise().done(function() {
       d.push(stateIdx[k]);
     }
 
-    var colorScale = d3.scale.linear()
-    .domain([1, 10])
-    .range(['grey', 'red']);
+    // var colorScale = d3.scale.linear()
+    // .domain([1, 10])
+    // .range(['grey', 'red']);
 
     // for (var i in dataset) {
     //   stateIdx[dataset[i].state].value = dataset[i].influence;
