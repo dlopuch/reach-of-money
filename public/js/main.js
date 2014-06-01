@@ -1,14 +1,12 @@
 
 define([
   'jquery', 'underscore',
-  'router',
-  'states'],
+  'views/statesMap'],
 function(
   $, _,
-  router,
-  states) {
+  statesMap) {
 
-  window.router = router;
+  window.statesMap = statesMap;
 
 
 });
