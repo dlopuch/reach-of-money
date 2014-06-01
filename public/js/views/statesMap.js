@@ -18,8 +18,27 @@ ContributionsService.getReadyPromise().done(function() {
     });
     otherStatesSelection = d3.selectAll('#statecontainer svg > g > path')
       .data(otherStates.contributions, function(d,i) { return d.id; });
+
     console.log('otherStatesSelection = ' + otherStatesSelection);
-    otherStatesSelection.attr('fill','red');
+
+
+    otherStatesColor = ContributionsService.getContributionsScaleStub().range(['white', 'green']);
+
+    console.log('d = ' + JSON.stringify(d));
+    console.log('otherStates.contributions =' + JSON.stringify(otherStates.contributions));
+
+    // otherStatesSelection.attr('fill','red');
+
+    otherStatesSelection.attr('fill',function(d) {
+      //debugger;
+            return otherStatesColor(d.amount_usd);
+         });
+
+    otherStatesSelection.exit()
+    .attr('fill', 'lightgrey');
+
+
+
   };
 
   var onStateHoverOff = function(d) {
@@ -34,6 +53,8 @@ ContributionsService.getReadyPromise().done(function() {
     });
     otherStatesSelection = d3.selectAll('#statecontainer svg > g > path')
       .data(otherStates.contributions, function(d,i) { return d.id; });
+    // foo = ContributionsService.getContributionsScaleStub();
+    // foo.range(['grey', 'red']);
     console.log('otherStatesSelection = ' + otherStatesSelection);
     otherStatesSelection.attr('fill','grey');
   };

@@ -142,9 +142,9 @@ define([
 
       // min and max for scales
       if (c.total_amount > maxContributionUSD)
-        maxContributionUSD = c.totalAmount;
+        maxContributionUSD = c.total_amount;
       if (c.total_amount < minContributionUSD)
-        minContributionUSD = c.totalAmount;
+        minContributionUSD = c.total_amount;
     });
 
     readyDeferred.resolve(ContributionsService);
