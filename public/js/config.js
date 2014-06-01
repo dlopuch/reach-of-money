@@ -9,7 +9,7 @@ require.config({
 
   paths: {
     "jquery": "/lib/jquery-2.1.0.min",
-    "backbone": "/lib/backbone-min",
+//    "backbone": "/lib/backbone-min",
     "d3": "/lib/d3.v3.3.2.min",
     "bootstrap": "/lib/bootstrap_232/js/bootstrap.min",
     "tpl": "/lib/tpl",
