@@ -1,0 +1,184 @@
+<%
+function choose(ary) {
+  return ary[ _.random(ary.length - 1) ];
+}
+
+function cleaned_up(str) {
+  if (str.search(',') > -1) {
+    str = str.split(",").reverse().join(" ").trim();
+  }
+  return str;
+}
+
+var SALUTATIONS = [
+        "Dear friends, my"
+      , "Dear constituent, my"
+      , "Salutations! My"
+      , "Hello friend, my"
+      , "Romans, countrymen, lend me your ears: my "
+    ],
+    REQUESTS = [
+        "If you vote for me,"
+      , "If you put your trust in me,"
+      , "If you believe in me,"
+      , "If you believe me when I tell you I don't take part in international arms deals,"
+      , "If you trust me more than then trusted Bernie Madoff,"
+      , "If you join me in this noble pursuit,"
+    ],
+    BIGGESTS = [
+        "is my biggest individual campaign contributor"
+      , "gave more money to my campaign than anyone else"
+      , "has been a real financial godsend to my campaign"
+      , "makes my candidacy possible"
+    ],
+    FIGHTINGS = [
+        "be fighting hard for"
+      , "be doing whatever I can to please"
+      , "be giving 100% of my effort for"
+      , "be lending my attentive ear to"
+      , "be bending over backwards for"
+      , "be polishing apples for"
+      , "be spit-shining the boots of"
+      , "be sucking-up to"
+      , "be asking 'How high?' when told to jump by"
+    ],
+    THANKS = [
+        "Thank you for helping me serve special interests to the best of my abilities!"
+      , "Thank you, and if you'd like me to support your interests, please make sure to make major donations to my " +
+        "next campaign!"
+      , "Thank you, both for your vote, and for taking part in 'sponsored democracy', whether you knew it or not!"
+    ],
+    CONTRIBUTOR_TYPES = {
+      'candidate_leadership_committee_dollars': "the Candidate Leadership Committees",
+      'candidate_money_dollars'               : "Candidate Money",
+      'individual_dollars'                    : "Constituents Like You",
+      'institution_dollars'                   : "Institutional Dollars",
+      'non_contribution_income_dollars'       : "Non-Contribution Income",
+      'party_committee_dollars'               : "Party Money",
+      'public_fund_dollars'                   : "Public Funds",
+      'unitemized_donation_dollars'           : "Unitemized Donations"
+    }
+%>
+<div class="candidateBio">
+  <p>
+    <%= choose(SALUTATIONS) %> name is
+    <a href="http://www.followthemoney.org/database/StateGlance/candidate.phtml?c=<%= candidate.imsp_candidate_id %>"
+       target="_blank">
+      <%= candidatePrettyName %></a>,
+    and I am running for <%= prettyPrint(candidate.office) %> of
+
+    <!-- This seems to be the only party name that doesn't sounds right in front of "Party" -->
+    <% party_name = prettyPrint(candidate.party) %>
+    <% if (party_name == "Democrat") { party_name = "Democratic"}  %>
+
+    <%= prettyPrint(candidate.state_name) %> as a member of the <b><%= party_name %> Party</b>.
+  </p>
+
+  <% if (candidate.total_dollars) { %>
+    <p>
+      Of the <b><%= n(candidate.total_dollars).format('$0,0')%></b> I raised,
+      <%= n(candidate.total_in_state_dollars / candidate.total_dollars).format('0%') %> was raised in-state.
+      <%= n(candidate.total_out_of_state_dollars / candidate.total_dollars).format('0%') %> of my funds are from
+      out-of-state, and <%= n(candidate.total_unknown_state_dollars / candidate.total_dollars).format('0%') %> is, er,
+      unclear.
+    </p>
+    <p>
+      <% if (candidate.public_fund_dollars) { %>
+        <%= n(candidate.public_fund_dollars / candidate.total_dollars).format('0%') %> came from public funding.
+      <% } else { %>
+        I did not take any public funding.  Instead,
+      <% } %>
+      I am primarily a candidate of
+      <b><%= CONTRIBUTOR_TYPES[contributorTypeBreakdownSorted[0].key] %></b> and
+      <b><%= CONTRIBUTOR_TYPES[contributorTypeBreakdownSorted[1].key] %></b>, with
+
+      <b><%= n(contributorTypeBreakdownSorted[0].value).format('$0,0') %></b>
+      (<%= n(contributorTypeBreakdownSorted[0].value / candidate.total_dollars).format('0%') %>) and
+
+      <b><%= n(contributorTypeBreakdownSorted[1].value).format('$0,0') %></b>
+      (<%= n(contributorTypeBreakdownSorted[1].value / candidate.total_dollars).format('0%') %>)
+
+      raised, respectively.
+    </p>
+    <% if (contributorTypeBreakdownSorted[0].key !== 'individual_dollars' &&
+           contributorTypeBreakdownSorted[1].key !== 'individual_dollars') { %>
+      <p>
+        Only <b><%= n(candidate.individual_dollars).format('$0,0') %></b> (
+        <%= n(candidate.individual_dollars / candidate.total_dollars).format('0%') %>
+        ) came from <%= CONTRIBUTOR_TYPES.individual_dollars %>.
+      </p>
+    <% } %>
+  <% } %>
+
+  <% if (top_contributors.length) { %>
+    <p>
+      <%= choose(REQUESTS) %> you can be sure that my top priority will be the best interests of
+
+      <% if (top_contributors[0].business_name === 'Uncoded' ||
+             top_contributors[0].business_name.search('candidate contributions to own campaign') > -1) { %>
+        <b><%= cleaned_up(prettyPrint(top_contributors[0].contributor_name)) %></b>, who
+      <% } else { %>
+        the <b><%= cleaned_up(prettyPrint(top_contributors[0].contributor_name)) %></b>, which
+      <% } %>
+
+      <%= choose(BIGGESTS) %>.
+      Of course, I will also <%= choose(FIGHTINGS) %>
+
+      <% if (top_contributors[1].business_name === 'Uncoded' ||
+             top_contributors[1].business_name.search('candidate contributions to own campaign') > -1) { %>
+        <b><%= cleaned_up(prettyPrint(top_contributors[1].contributor_name)) %></b>, who
+      <% } else { %>
+        the <b><%= cleaned_up(prettyPrint(top_contributors[1].contributor_name)) %></b>, which
+      <% } %>
+
+       is my second biggest individual source of campaign cash.
+    </p>
+
+    <!-- Sectors -->
+    <p>
+      <% if (top50PctContributions.length === 1) { %>
+        I don't have a lot of interests.  The vast majority of my finances come from
+        <b><%= top50PctContributions[0].sector_name %></b>
+        (<%= n(top50PctContributions[0].sector_contribution_pct).format('0%') %>).
+        Rest assured that most of my attention will be indebted to the needs of those people.
+
+      <% } else if (top50PctContributions.length === 2) { %>
+        I have few interests, mostly <b><%= top50PctContributions[0].sector_name %></b> and
+        <b><%= top50PctContributions[1].sector_name %></b>
+        (<%= n(top50PctContributions[0].sector_contribution_pct).format('0%') %> and
+        <%= n(top50PctContributions[1].sector_contribution_pct).format('0%') %> respectively) .
+        I assure you that my attention will be split between those two sectors.
+      <% } else { %>
+        I have many varied interests!  My favorites are
+        <%= top50PctContributions.map(function(s, i, l) {
+              if (i === l.length - 1) {
+                return 'and <b>' + s.sector_name + '</b>';
+              } else {
+                return '<b>' + s.sector_name + '</b>';
+              }
+            }).join(', ') %>.
+      <% } %>
+      <% if (from50to75PctContributions.length) { %>
+        However, there are other sectors that are important to us as a nation.  Specifically, I also believe in supporting
+        <%= from50to75PctContributions.map(function(s, i, l) {
+              var comma = l.length >= 3 && i > 0 ? ', ' : ' ';
+              if (l.length > 1 && i === l.length - 1) {
+                return comma + ' and <b>' + s.sector_name + '</b> (' + n(s.sector_contribution_pct).format('0%') + ')';
+              } else {
+                return comma + '<b>' + s.sector_name + '</b> (' + n(s.sector_contribution_pct).format('0%') + ')';
+              }
+            }).join('') %>
+      <% } %>
+    </p>
+  <% } %>
+
+  <% if (!industries.length && !top_contributors.length) { %>
+    <p>
+      Since I didn't raise any money, I am just running for what I believe in. To find out more, please see my
+      campaign website and the <%= prettyPrint(candidate.party) %> party website for more information.
+    </p>
+  <% } else { %>
+    <%= choose(THANKS) %>
+  <% } %>
+
+</div>
