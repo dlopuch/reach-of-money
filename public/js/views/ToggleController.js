@@ -6,15 +6,15 @@ define([
   $('.incoming').click(function() {
     console.log('incoming handler for body click, changing mode of ContributionsService');
 
-      ContributionsService.switchToIncomingMode()
-      console.log(ContributionsService.switchToIncomingMode);
+    ContributionsService.switchToIncomingMode();
+    console.log(ContributionsService.switchToIncomingMode);
   });
 
   $('.outgoing').click(function() {
     console.log('outgoing incoming handler for body click, changing mode of ContributionsService');
 
-        ContributionsService.switchToOutgoingMode();
-        console.log(ContributionsService.switchToOutgoingMode);
+    ContributionsService.switchToOutgoingMode();
+    console.log(ContributionsService.switchToOutgoingMode);
   });
 
 });

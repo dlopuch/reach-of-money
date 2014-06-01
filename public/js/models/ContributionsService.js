@@ -80,13 +80,13 @@ define([
       if (isOutgoingMode) {
         return {
           type: 'outgoing',
-          contributions: _.clone(incomingContributionsByStateIdx[stateId]) // not deep clone.  don't modify the objects.
+          contributions: _.clone(outgoingContributionsByStateIdx[stateId]) // not deep clone.  don't modify the objects.
         };
 
       } else {
         return {
           type: 'incoming',
-          contributions: _.clone(outgoingContributionsByStateIdx[stateId])
+          contributions: _.clone(incomingContributionsByStateIdx[stateId])
         };
       }
 
@@ -97,7 +97,7 @@ define([
      *                            contributions.  Consumer should set the range with whatever parameters (eg colors).
      */
     getContributionsScaleStub: function() {
-      return d3.scale.linear().domain([minContributionUSD, maxContributionUSD]);
+      return d3.scale.linear().domain([1, maxContributionUSD]);
     }
   };
 
