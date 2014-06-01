@@ -3,14 +3,18 @@ define([
   'models/ContributionsService'
 ], function($, ContributionsService) {
 
-  $('body').click(function() {
-    console.log('handler for body click, changing mode of ContributionsService');
+  $('.incoming').click(function() {
+    console.log('incoming handler for body click, changing mode of ContributionsService');
 
-    if (ContributionsService.isOutgoingMode()) {
-      ContributionsService.switchToIncomingMode();
-    } else {
-      ContributionsService.switchToOutgoingMode();
-    }
+      ContributionsService.switchToIncomingMode()
+      console.log(ContributionsService.switchToIncomingMode);
+  });
+
+  $('.outgoing').click(function() {
+    console.log('outgoing incoming handler for body click, changing mode of ContributionsService');
+
+        ContributionsService.switchToOutgoingMode();
+        console.log(ContributionsService.switchToOutgoingMode);
   });
 
 });
