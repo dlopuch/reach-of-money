@@ -2,11 +2,13 @@
 define([
   'jquery', 'underscore',
   'views/statesMap',
-  'models/ContributionsService'],
+  'models/ContributionsService',
+  'views/ToggleController'],
 function(
   $, _,
   statesMap,
-  ContributionsService) {
+  ContributionsService,
+  ToggleController) {
 
   window.statesMap = statesMap;
 
