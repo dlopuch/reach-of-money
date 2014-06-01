@@ -1,15 +1,41 @@
 define(['jquery', 'd3', 'data/statepaths', 'models/ContributionsService'],
-function($, d3, statepaths, ContributionsServer) {
+function($, d3, statepaths, ContributionsService) {
+
+ContributionsService.getReadyPromise().done(function() {
+  console.log(ContributionsService.getContributionsByState('CA'));
+});
 
   var statesMapDone = $.Deferred();
 
   var onStateHover = function(d) {
     // TODO call contributionsService to get list of states to select.
-    console.log("hellow, mouseover");
     console.log("d is "+ JSON.stringify(d));
     console.log("you have moused over " + d.id);
-    // console.log("this = " + this);
     var nodeSelection = d3.select(this).style({opacity:'0.8'});
+    ContributionsService.getReadyPromise().done(function() {
+      console.log(ContributionsService.getContributionsByState(d.id));
+      otherStates = ContributionsService.getContributionsByState(d.id);
+    });
+    otherStatesSelection = d3.selectAll('#statecontainer svg > g > path')
+      .data(otherStates.contributions, function(d,i) { return d.id; });
+    console.log('otherStatesSelection = ' + otherStatesSelection);
+    otherStatesSelection.attr('fill','red');
+  };
+
+  var onStateHoverOff = function(d) {
+    // TODO call contributionsService to get list of states to select.
+          // console.log("hellow, mouseover");
+          // console.log("d is "+ JSON.stringify(d));
+          // console.log("you have moused over " + d.id);
+    var nodeSelection = d3.select(this).style({opacity:'1.0'});
+    ContributionsService.getReadyPromise().done(function() {
+      console.log(ContributionsService.getContributionsByState(d.id));
+      otherStates = ContributionsService.getContributionsByState(d.id);
+    });
+    otherStatesSelection = d3.selectAll('#statecontainer svg > g > path')
+      .data(otherStates.contributions, function(d,i) { return d.id; });
+    console.log('otherStatesSelection = ' + otherStatesSelection);
+    otherStatesSelection.attr('fill','grey');
   };
 
   d3.csv("js/data/datatest.csv", function(dataset) {
@@ -51,16 +77,8 @@ function($, d3, statepaths, ContributionsServer) {
          .attr('stroke', 'rgba(255,255,255,.2)')
          .attr('opacity',0)
          .attr('transform', 'translate(1000,1000)scale(0)translate(-1000,-1000)')
-         .on("mouseover", function(d) {
-            onStateHover.apply(this, arguments);
-          })
-          .on("mouseout", function(d) {
-          // console.log("hellow, mouseover");
-          // console.log("d is "+ JSON.stringify(d));
-          // console.log("you have moused over " + d.id);
-          var nodeSelection = d3.select(this).style({opacity:'1.0'});
-          // nodeSelection.select("text").style({opacity:'1.0'});
-          });
+         .on("mouseover", onStateHover)
+         .on("mouseout", onStateHoverOff)
 
     p.transition().duration(500)
                   .delay(function(d, i) { return i * 10; })
