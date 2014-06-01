@@ -5,6 +5,11 @@ function($, d3, statepaths, ContributionsServer) {
 
   var onStateHover = function(d) {
     // TODO call contributionsService to get list of states to select.
+    console.log("hellow, mouseover");
+    console.log("d is "+ JSON.stringify(d));
+    console.log("you have moused over " + d.id);
+    // console.log("this = " + this);
+    var nodeSelection = d3.select(this).style({opacity:'0.8'});
   };
 
   d3.csv("js/data/datatest.csv", function(dataset) {
@@ -36,23 +41,6 @@ function($, d3, statepaths, ContributionsServer) {
     }
 
 
-
-    // d.push({
-    //   id: 'CA',
-    //   path: states['CA'],
-    //   <!-- color: '#'+Math.floor(Math.random()*16777215).toString(16) -->
-    //   color: 'red'
-    // });
-
-    // var p = g.selectAll('path').data(d);
-
-    // d.push({
-    //   id: 'MN',
-    //   path: states['MN'],
-    //   <!-- color: '#'+Math.floor(Math.random()*16777215).toString(16) -->
-    //   color: 'green'
-    // });
-
     var p = g.selectAll('path').data(d);
 
     p.enter().append('path')
@@ -64,17 +52,12 @@ function($, d3, statepaths, ContributionsServer) {
          .attr('opacity',0)
          .attr('transform', 'translate(1000,1000)scale(0)translate(-1000,-1000)')
          .on("mouseover", function(d) {
-                    console.log("hellow, mouseover");
-                    console.log("d is "+ JSON.stringify(d));
-                    console.log("you have moused over " + d.id);
-                    var nodeSelection = d3.select(this).style({opacity:'0.8'});
-
-                    // nodeSelection.select("text").style({opacity:'1.0'});
-                    })
+            onStateHover.apply(this, arguments);
+          })
           .on("mouseout", function(d) {
-          console.log("hellow, mouseover");
-          console.log("d is "+ JSON.stringify(d));
-          console.log("you have moused over " + d.id);
+          // console.log("hellow, mouseover");
+          // console.log("d is "+ JSON.stringify(d));
+          // console.log("you have moused over " + d.id);
           var nodeSelection = d3.select(this).style({opacity:'1.0'});
           // nodeSelection.select("text").style({opacity:'1.0'});
           });
