@@ -1,0 +1,13 @@
+.header {
+    text-align: center;
+
+}
+
+.from-to {
+    /*margin-left: 50%;*/
+    padding: 20px 0 0 0;
+}
+
+.btn {
+    min-width: 65px;
+}
