@@ -16,6 +16,7 @@ function(
     console.log('Failed grabbing out of state contributions!', e, e.stack);
   })
   .done(function(outOfStateContributions) {
+    window.outOfStateContributions = outOfStateContributions;
     console.log('Loaded out of state contributions:', outOfStateContributions);
   });
 

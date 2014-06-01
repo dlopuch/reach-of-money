@@ -1,6 +1,11 @@
-define(['jquery', 'd3', 'data/statepaths'], function($, d3, statepaths) {
+define(['jquery', 'd3', 'data/statepaths', 'models/ContributionsService'],
+function($, d3, statepaths, ContributionsServer) {
 
   var statesMapDone = $.Deferred();
+
+  var onStateHover = function(d) {
+    // TODO call contributionsService to get list of states to select.
+  };
 
   d3.csv("js/data/datatest.csv", function(dataset) {
 
