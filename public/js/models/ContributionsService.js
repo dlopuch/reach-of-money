@@ -9,10 +9,10 @@ define([
 
       /** Given a state ID, maps to an array of all contributions going out of that state.
        *  Contributions with no originating state are keyed at 'none'. */
-      outgoingContributionsByState,
+      outgoingContributionsByStateIdx,
 
       /** Given a state ID, maps to an array of all contributions coming into that state. */
-      incomingContributionsByState;
+      incomingContributionsByStateIdx;
 
   /**
    * ContributionsService singleton
@@ -47,7 +47,7 @@ define([
      *                                   {id: {String}, num_contributions: {number}, amount_usd: {number}}
      */
     getContributionsByState: function(stateId) {
-      if (!outgoingContributionsByState && !incomingContributionsByState) {
+      if (!outgoingContributionsByStateIdx && !incomingContributionsByStateIdx) {
         console.warn("Warning! Data not yet loaded, race condition!  Wait for service with getReadyPromise().");
         return []; // data not yet loaded
       }
@@ -59,13 +59,13 @@ define([
       if (isOutgoingMode) {
         return {
           type: 'outgoing',
-          contributions: _.clone(incomingContributionsByState[stateId]) // not deep clone.  don't modify the objects.
+          contributions: _.clone(incomingContributionsByStateIdx[stateId]) // not deep clone.  don't modify the objects.
         };
 
       } else {
         return {
           type: 'incoming',
-          contributions: _.clone(outgoingContributionsByState[stateId])
+          contributions: _.clone(outgoingContributionsByStateIdx[stateId])
         };
       }
 
@@ -85,17 +85,17 @@ define([
   })
   .done(function(contribs) {
 
-    outgoingContributionsByState = {};
-    incomingContributionsByState = {};
+    outgoingContributionsByStateIdx = {};
+    incomingContributionsByStateIdx = {};
 
     var stateId;
     contribs.forEach(function(c) {
       // Outgoing contributions
       stateId = c.donor_state || 'none';
-      if (!outgoingContributionsByState[stateId])
-        outgoingContributionsByState[stateId] = [];
+      if (!outgoingContributionsByStateIdx[stateId])
+        outgoingContributionsByStateIdx[stateId] = [];
 
-      outgoingContributionsByState[stateId].push({
+      outgoingContributionsByStateIdx[stateId].push({
         id: c.candidates_state,
         num_contributions: c.num_donations,
         amount_usd: c.total_amount
@@ -104,17 +104,18 @@ define([
 
       // Incoming contributions
       stateId = c.candidates_state;
-      if (!incomingContributionsByState[stateId])
-        incomingContributionsByState[stateId] = [];
+      if (!incomingContributionsByStateIdx[stateId])
+        incomingContributionsByStateIdx[stateId] = [];
 
-      incomingContributionsByState[stateId].push({
+      incomingContributionsByStateIdx[stateId].push({
         id: c.donor_state || 'none',
         num_contributions: c.num_donations,
         amount_usd: c.total_amount
       });
 
-      readyDeferred.resolve(ContributionsService);
     });
+
+    readyDeferred.resolve(ContributionsService);
   });
 
   return ContributionsService;
