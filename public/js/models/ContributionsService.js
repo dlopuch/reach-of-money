@@ -12,28 +12,48 @@ define([
       outgoingContributionsByStateIdx,
 
       /** Given a state ID, maps to an array of all contributions coming into that state. */
-      incomingContributionsByStateIdx;
+      incomingContributionsByStateIdx,
+
+      minContributionUSD = Infinity,
+      maxContributionUSD = -Infinity;
 
   /**
+   * @module ContributionsService
+   *
    * ContributionsService singleton
-   * (what this require module returns)
+   * (the object this requirejs module returns)
    */
   var ContributionsService = {
-    switchToIncomingMode: function() {
-      isOutgoingMode = false;
-    },
-    switchToOutgoingMode: function() {
-      isOutgoingMode = true;
-    },
-    isOutgoingMode: function() {
-      return isOutgoingMode;
-    },
-
     /**
      * @returns {$.Promise} a promise that gets resolved when this service has loaded all data and is ready
      */
     getReadyPromise: function() {
       return readyDeferred.promise();
+    },
+
+    /**
+     * Makes getContributionsByState() return incoming contributions to a given state
+     * @returns this, for chaining
+     */
+    switchToIncomingMode: function() {
+      isOutgoingMode = false;
+      return ContributionsService;
+    },
+
+    /**
+     * Makes getContributionsByState() return outgoing contributions from a given state
+     * @returns this, for chaining
+     */
+    switchToOutgoingMode: function() {
+      isOutgoingMode = true;
+      return ContributionsService;
+    },
+
+    /**
+     * @returns true if service is returning outgoing contributions, false for incoming
+     */
+    isOutgoingMode: function() {
+      return isOutgoingMode;
     },
 
     /**
@@ -48,7 +68,8 @@ define([
      */
     getContributionsByState: function(stateId) {
       if (!outgoingContributionsByStateIdx && !incomingContributionsByStateIdx) {
-        console.warn("Warning! Data not yet loaded, race condition!  Wait for service with getReadyPromise().");
+        console.warn("[ContributionsService] Warning! Data not yet loaded, race condition!  Wait for service " +
+                     "with getReadyPromise().");
         return []; // data not yet loaded
       }
 
@@ -70,8 +91,13 @@ define([
       }
 
     },
-    getScaleStub: function() {
-      return d3.scale.linear().domain([0,1]);
+
+    /**
+     * @returns {d3.scale.linear} A linear D3 scale with domain set for the limits of individual state-to-state
+     *                            contributions.  Consumer should set the range with whatever parameters (eg colors).
+     */
+    getContributionsScaleStub: function() {
+      return d3.scale.linear().domain([minContributionUSD, maxContributionUSD]);
     }
   };
 
@@ -113,6 +139,12 @@ define([
         amount_usd: c.total_amount
       });
 
+
+      // min and max for scales
+      if (c.total_amount > maxContributionUSD)
+        maxContributionUSD = c.totalAmount;
+      if (c.total_amount < minContributionUSD)
+        minContributionUSD = c.totalAmount;
     });
 
     readyDeferred.resolve(ContributionsService);
