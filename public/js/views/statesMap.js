@@ -12,7 +12,7 @@ ContributionsService.getReadyPromise().done(function() {
     // TODO call contributionsService to get list of states to select.
     console.log("d is "+ JSON.stringify(d));
     console.log("you have moused over " + d.id);
-    var nodeSelection = d3.select(this).style({opacity:'0.8'});
+    var nodeSelection = d3.select(this).style({opacity:'0.8'}).attr('fill','red');
     ContributionsService.getReadyPromise().done(function() {
       console.log(ContributionsService.getContributionsByState(d.id));
       otherStates = ContributionsService.getContributionsByState(d.id);
@@ -86,9 +86,9 @@ ContributionsService.getReadyPromise().done(function() {
 
   };
 
-  d3.csv("js/data/datatest.csv", function(dataset) {
+  // d3.csv("js/data/datatest.csv", function(dataset) {
 
-    console.log("dataset" + JSON.stringify(dataset));
+    // console.log("dataset" + JSON.stringify(dataset));
 
     var svg = d3.select('#statecontainer')
               .append('svg')
@@ -129,21 +129,19 @@ ContributionsService.getReadyPromise().done(function() {
     .domain([1, 10])
     .range(['grey', 'red']);
 
-    for (var i in dataset) {
-      stateIdx[dataset[i].state].value = dataset[i].influence;
-    }
+    // for (var i in dataset) {
+    //   stateIdx[dataset[i].state].value = dataset[i].influence;
+    // }
 
 
     var p = g.selectAll('path').data(d);
 
     p.enter().append('path')
          .attr('id', function(d) {return 'US_' + d.id;})
-         .attr('fill', function(d) {
-            return colorScale(d.value || 1);
-         })
+         .attr('fill', 'lightgrey')
          .attr('d', function(d) { return d.path; })
-         .attr('stroke', 'rgba(255,255,255,.2)')
-         .attr('opacity',0)
+         .attr('stroke', 'rgba(0,0,0,1)')
+         .attr('opacity',1)
          .attr('transform', 'translate(1000,1000)scale(0)translate(-1000,-1000)')
          .on("mouseover", onStateHover)
          .on("mouseout", onStateHoverOff)
@@ -154,7 +152,7 @@ ContributionsService.getReadyPromise().done(function() {
                   .attr('transform', 'translate(900,300)scale(1)translate(-900,-300)');
 
     statesMapDone.resolve();
-  });
+  // });
 
   return statesMapDone;
 });
