@@ -8,7 +8,7 @@ ContributionsService.getReadyPromise().done(function() {
   var statesMapDone = $.Deferred();
 
   var onStateHover = function(d) {
-    makeHighlightCirclePing.call(this, d, true);
+    makeHighlightCirclePing.call(this, d, ContributionsService.isOutgoingMode());
     // TODO call contributionsService to get list of states to select.
     console.log("d is "+ JSON.stringify(d));
     console.log("you have moused over " + d.id);
