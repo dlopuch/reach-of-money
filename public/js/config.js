@@ -8,15 +8,15 @@ require.config({
   baseUrl: "/js/",
 
   paths: {
-    "jquery": "/lib/jquery-2.1.0.min",
-    "backbone": "/lib/backbone-min",
     "d3": "/lib/d3.v3.3.2.min",
-    "bootstrap": "/lib/bootstrap_232/js/bootstrap.min",
     "tpl": "/lib/tpl",
     "underscore": "/lib/lodash.min",
     "highcharts": "/lib/highcharts-all",
-    "jquery-slider": "/lib/jquery-ui-1.10.4.slider",
-    "numeral": "/lib/numeral.min"
+    "numeral": "/lib/numeral.min",
+//    "jquery-slider": "/lib/jquery-ui-1.10.4.slider"
+//    "jquery": "/lib/jquery-2.1.0.min",
+//    "backbone": "/lib/backbone-min",
+//    "bootstrap": "/lib/bootstrap_232/js/bootstrap.min",
   },
 
   shim: {
