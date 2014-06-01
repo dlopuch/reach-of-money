@@ -97,7 +97,7 @@ define([
      *                            contributions.  Consumer should set the range with whatever parameters (eg colors).
      */
     getContributionsScaleStub: function() {
-      return d3.scale.linear().domain([1, maxContributionUSD]);
+      return d3.scale.linear().domain([0, maxContributionUSD]);
     }
   };
 
