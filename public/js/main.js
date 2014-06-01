@@ -2,23 +2,15 @@
 define([
   'jquery', 'underscore',
   'views/statesMap',
-  'models/promiseOutOfStateContributions'],
+  'models/ContributionsService'],
 function(
   $, _,
   statesMap,
-  promiseOutOfStateContributions) {
+  ContributionsService) {
 
   window.statesMap = statesMap;
 
-  window.promiseOutOfStateContributions = promiseOutOfStateContributions;
-  promiseOutOfStateContributions
-  .fail(function(e) {
-    console.log('Failed grabbing out of state contributions!', e, e.stack);
-  })
-  .done(function(outOfStateContributions) {
-    window.outOfStateContributions = outOfStateContributions;
-    console.log('Loaded out of state contributions:', outOfStateContributions);
-  });
+  window.ContributionsService = ContributionsService;
 
 
 });
